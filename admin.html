@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>لوحة التحكم — Vinland</title>
+<link rel="icon" type="image/png" href="logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Tajawal:wght@400;700;900&family=Amiri:wght@700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ===== الهيدر ===== -->
+<header>
+  <div class="logo">
+    <a href="index.html">
+      <img src="https://api.iconify.design/mdi:leaf.svg?color=%237cb342" alt="" class="logo-icon">
+      Vin<span>land</span>
+      <span style="font-size:14px;color:var(--gray-600);font-family:'Cairo';font-weight:600;margin-right:8px;">— لوحة التحكم</span>
+    </a>
+  </div>
+  <nav>
+    <a href="index.html">الموقع</a>
+    <button class="login-btn" id="logoutBtn" style="display:none;">
+      <img src="https://api.iconify.design/mdi:logout.svg?color=%23ffffff" alt="" class="nav-icon">
+      خروج
+    </button>
+  </nav>
+</header>
+
+<!-- ===== المحتوى ===== -->
+<main id="adminMain">
+
+  <!-- شاشة تسجيل الدخول -->
+  <div class="admin-login" id="adminLogin">
+    <div class="admin-login-box">
+      <img src="https://api.iconify.design/mdi:shield-account.svg?color=%237cb342" alt="" style="width:64px;height:64px;margin:0 auto 20px;">
+      <h1>دخول الأدمن</h1>
+      <p>سجل دخولك بحساب الأدمن للوصول للوحة التحكم</p>
+
+      <button class="social-btn google" id="adminLoginBtn">
+        <img src="https://api.iconify.design/mdi:google.svg?color=%234285f4" alt="" class="social-icon">
+        تسجيل الدخول بجوجل
+      </button>
+
+      <p class="auth-terms" style="margin-top:20px;">
+        فقط الإيميلات المسجلة كأدمن تقدر تدخل
+      </p>
+    </div>
+  </div>
+
+  <!-- محتوى اللوحة (يظهر بعد تسجيل الدخول) -->
+  <div class="admin-content" id="adminContent" style="display:none;">
+
+    <!-- العنوان -->
+    <div class="admin-header">
+      <h1>
+        <img src="https://api.iconify.design/mdi:view-dashboard.svg?color=%237cb342" alt="" style="width:32px;height:32px;vertical-align:middle;margin-left:10px;">
+        لوحة التحكم
+      </h1>
+      <p>مرحباً <strong id="adminName">—</strong></p>
+    </div>
+
+    <!-- الإحصائيات -->
+    <div class="admin-stats" id="adminStats">
+      <!-- تُعرض بالـ JS -->
+    </div>
+
+    <!-- التبويبات -->
+    <div class="admin-tabs">
+      <button class="admin-tab active" data-tab="products">
+        <img src="https://api.iconify.design/mdi:package-variant.svg?color=%237cb342" alt="">
+        المنتجات
+      </button>
+      <button class="admin-tab" data-tab="orders">
+        <img src="https://api.iconify.design/mdi:clipboard-list.svg?color=%237cb342" alt="">
+        الطلبات
+      </button>
+      <button class="admin-tab" data-tab="users">
+        <img src="https://api.iconify.design/mdi:account-group.svg?color=%237cb342" alt="">
+        المستخدمين
+      </button>
+    </div>
+
+    <!-- قسم المنتجات -->
+    <div class="admin-panel active" id="tab-products">
+      <div class="admin-panel-header">
+        <h2>إدارة المنتجات</h2>
+        <button class="btn" id="addProductBtn" style="padding:10px 22px;font-size:14px;">
+          <img src="https://api.iconify.design/mdi:plus.svg?color=%23ffffff" alt="" style="width:18px;height:18px;vertical-align:middle;margin-left:6px;">
+          إضافة منتج
+        </button>
+      </div>
+      <div id="productsTable"></div>
+    </div>
+
+    <!-- قسم الطلبات -->
+    <div class="admin-panel" id="tab-orders">
+      <div class="admin-panel-header">
+        <h2>إدارة الطلبات</h2>
+      </div>
+      <div id="ordersTable"></div>
+    </div>
+
+    <!-- قسم المستخدمين -->
+    <div class="admin-panel" id="tab-users">
+      <div class="admin-panel-header">
+        <h2>إدارة المستخدمين</h2>
+      </div>
+      <div id="usersTable"></div>
+    </div>
+
+  </div>
+
+  <!-- شاشة "غير مسموح" -->
+  <div class="admin-login" id="adminDenied" style="display:none;">
+    <div class="admin-login-box">
+      <img src="https://api.iconify.design/mdi:shield-alert.svg?color=%23ff5252" alt="" style="width:64px;height:64px;margin:0 auto 20px;">
+      <h1>غير مسموح</h1>
+      <p>هذا الحساب ليس لديه صلاحيات أدمن</p>
+      <a href="index.html" class="btn" style="margin-top:20px;">العودة للموقع</a>
+    </div>
+  </div>
+
+</main>
+
+<!-- ===== Modal إضافة/تعديل منتج ===== -->
+<div class="admin-modal" id="productModal">
+  <div class="admin-modal-backdrop" id="productModalBackdrop"></div>
+  <div class="admin-modal-box">
+    <button class="admin-modal-close" id="productModalClose">✕</button>
+    <h2 id="modalTitle">إضافة منتج</h2>
+
+    <form id="productForm">
+      <input type="hidden" id="productId" />
+
+      <label>
+        <span>اسم المنتج *</span>
+        <input type="text" id="pName" required>
+      </label>
+
+      <label>
+        <span>الوصف المختصر *</span>
+        <input type="text" id="pDesc" required>
+      </label>
+
+      <label>
+        <span>الوصف الكامل</span>
+        <textarea id="pLongDesc" rows="3"></textarea>
+      </label>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+        <label>
+          <span>السعر ($) *</span>
+          <input type="number" id="pPrice" step="0.01" min="0" required>
+        </label>
+
+        <label>
+          <span>المخزون *</span>
+          <input type="number" id="pStock" min="0" required>
+        </label>
+      </div>
+
+      <label>
+        <span>الفئة *</span>
+        <select id="pCategory" required>
+          <option value="accounts">حسابات</option>
+          <option value="subscriptions">اشتراكات</option>
+          <option value="tools">أدوات</option>
+        </select>
+      </label>
+
+      <label>
+        <span>رابط الصورة</span>
+        <input type="url" id="pImage" placeholder="https://...">
+      </label>
+
+      <label>
+        <span>شارة (اختياري)</span>
+        <select id="pBadge">
+          <option value="">— بدون —</option>
+          <option value="hot">حار</option>
+          <option value="new">جديد</option>
+          <option value="featured">مميز</option>
+        </select>
+      </label>
+
+      <label style="flex-direction:row;align-items:center;gap:8px;">
+        <input type="checkbox" id="pBestSeller" style="width:auto;">
+        <span>الأكثر مبيعاً</span>
+      </label>
+
+      <button type="submit" class="btn" style="width:100%;margin-top:20px;">
+        <span id="saveBtnText">حفظ المنتج</span>
+      </button>
+    </form>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="admin.js"></script>
+</body>
+</html>
