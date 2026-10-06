@@ -11,24 +11,29 @@
 </head>
 <body>
 
+<!-- ===== الهيدر ===== -->
 <header>
-  <div class="logo">🌿 Vin<span>land</span></div>
+  <div class="logo"><a href="index.html">🌿 Vin<span>land</span></a></div>
   <nav>
     <a href="#home">الرئيسية</a>
     <a href="#products">المنتجات</a>
     <a href="#reviews">آراء العملاء</a>
     <a href="#faq">الأسئلة</a>
-    <a href="#track">تتبع الطلب</a>
-    <a href="#" class="cart-link" id="cartToggle">🛒 السلة <span class="cart-badge">0</span></a>
+    <a href="cart.html" class="cart-link">🛒 السلة <span class="cart-badge">0</span></a>
   </nav>
 </header>
 
+<!-- ===== الهيرو ===== -->
 <section class="hero" id="home">
   <h1>Vinland</h1>
   <p>متجرك الرقمي الأول — حسابات، اشتراكات، وخدمات بأفضل الأسعار.</p>
-  <a href="#products" class="btn">تسوّق الآن</a>
+  <div class="hero-buttons">
+    <a href="#products" class="btn">تسوّق الآن</a>
+    <a href="track.html" class="btn-outline">📦 تتبع طلبك</a>
+  </div>
 </section>
 
+<!-- ===== شريط الميزات ===== -->
 <div class="features-bar">
   <div class="feature"><span class="feature-icon">⚡</span> تسليم فوري</div>
   <div class="feature"><span class="feature-icon">🛡️</span> ضمان كامل</div>
@@ -36,44 +41,53 @@
   <div class="feature"><span class="feature-icon">💳</span> دفع آمن</div>
 </div>
 
+<!-- ===== الأكثر مبيعاً ===== -->
 <section class="section" id="best">
   <h2 class="section-title">🔥 <span>الأكثر مبيعاً</span></h2>
   <p class="section-subtitle">أشهر المنتجات اللي اختارها عملاؤنا</p>
   <div class="best-sellers" id="bestSellers"></div>
 </section>
 
+<!-- ===== المنتجات ===== -->
 <section class="section" id="products">
   <h2 class="section-title">🛍️ <span>كل المنتجات</span></h2>
   <p class="section-subtitle">اختر من تشكيلتنا الواسعة</p>
+
   <div class="filters" id="filters">
     <button class="filter-btn active" data-filter="all">الكل</button>
     <button class="filter-btn" data-filter="accounts">🎮 حسابات</button>
     <button class="filter-btn" data-filter="subscriptions">🎬 اشتراكات</button>
     <button class="filter-btn" data-filter="tools">🛠️ أدوات</button>
   </div>
+
   <div class="products-grid" id="productsGrid"></div>
 </section>
 
+<!-- ===== آراء العملاء ===== -->
 <section class="section" id="reviews">
   <h2 class="section-title">⭐ <span>آراء العملاء</span></h2>
   <p class="section-subtitle">شنو قالوا عنا؟</p>
   <div class="reviews" id="reviewsGrid"></div>
 </section>
 
+<!-- ===== FAQ ===== -->
 <section class="section" id="faq">
   <h2 class="section-title">❓ <span>الأسئلة الشائعة</span></h2>
   <p class="section-subtitle">كل اللي تحتاج تعرفه</p>
   <div class="faq-list" id="faqList"></div>
 </section>
 
+<!-- ===== تتبع الطلب السريع ===== -->
 <section class="section" id="track">
   <h2 class="section-title">📦 <span>تتبع طلبك</span></h2>
   <p class="section-subtitle">أدخل رقم الطلب لمعرفة حالته</p>
+
   <div class="track-box">
     <div class="track-form">
       <input type="text" id="trackInput" placeholder="مثال: VL-2025-001" />
       <button onclick="trackOrder()">تتبع</button>
     </div>
+
     <div class="timeline" id="timeline">
       <div class="timeline-step done">
         <div class="step-dot">✓</div>
@@ -95,16 +109,19 @@
   </div>
 </section>
 
+<!-- ===== الفوتر ===== -->
 <footer>
   <div class="footer-links">
-    <a href="#home">الرئيسية</a>
+    <a href="index.html">الرئيسية</a>
     <a href="#products">المنتجات</a>
+    <a href="cart.html">السلة</a>
+    <a href="track.html">تتبع الطلب</a>
     <a href="#faq">الأسئلة</a>
-    <a href="#track">تتبع الطلب</a>
   </div>
   © 2025 <span>Vinland</span> — كل الحقوق محفوظة 🌿
 </footer>
 
+<!-- ===== السلة الجانبية ===== -->
 <div class="cart-backdrop" id="cartBackdrop"></div>
 <aside class="cart-drawer" id="cartDrawer">
   <div class="cart-header">
@@ -115,8 +132,10 @@
   <div class="cart-footer" id="cartFooter"></div>
 </aside>
 
+<!-- ===== زر واتساب ===== -->
 <a href="https://wa.me/0000000000" target="_blank" class="whatsapp-float">💬</a>
 
+<!-- ===== إشعار ===== -->
 <div class="toast" id="toast"></div>
 
 <script src="products.js"></script>
