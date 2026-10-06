@@ -956,14 +956,32 @@ function changeQty(productId, delta) {
   renderCartPage();
 }
 
-/* ============================================
-   التشغيل الرئيسي
-   ============================================ */
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+  // أول شي: جلب المنتجات
+  await fetchProducts();
+
+  // بعدها: تهيئة كل شي
   updateCartBadge();
   initAuth();
   initCartDrawer();
   renderCart();
+
+  // الرئيسية
+  renderProducts('all');
+  renderBestSellers();
+  renderReviews();
+  renderFAQs();
+  initFilters();
+
+  // صفحة المنتج
+  initProductPage();
+
+  // صفحة الحساب
+  initAccountPage();
+
+  // صفحة السلة
+  initCartPage();
+});
 
   // الرئيسية
   renderProducts('all');
