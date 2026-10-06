@@ -8,7 +8,7 @@
 const SUPABASE_URL = 'https://ncrycgbrstafdouvipzc.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_6t2dkU27Rkinsoo8MhYAEQ_FSgj4G73';
 const CART_KEY = 'vinland_cart';
-const WHATSAPP_NUMBER = '0000000000'; // ← بدّل رقمك هنا
+const WHATSAPP_NUMBER = '0670305009'; // ← بدّل رقمك هنا
 
 let sb = null;
 if (window.supabase) {
