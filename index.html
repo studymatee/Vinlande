@@ -4,159 +4,129 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Vinland — متجر رقمي</title>
-
-<!-- الأيقونة -->
 <link rel="icon" type="image/png" href="logo.png">
-
-<!-- الخطوط -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Tajawal:wght@400;700;900&family=Amiri:wght@700&display=swap" rel="stylesheet">
-
-<!-- Supabase -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-<!-- الستايل -->
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<!-- ============================================
-     الهيدر
-     ============================================ -->
 <header>
-  <div class="logo"><a href="index.html">🌿 Vin<span>land</span></a></div>
+  <div class="logo">
+    <a href="index.html">
+      <img src="https://api.iconify.design/mdi:leaf.svg?color=%237cb342" alt="" class="logo-icon">
+      Vin<span>land</span>
+    </a>
+  </div>
   <nav>
     <a href="#home">الرئيسية</a>
     <a href="#products">المنتجات</a>
     <a href="#reviews">آراء العملاء</a>
     <a href="#faq">الأسئلة</a>
-    <a href="cart.html" class="cart-link">🛒 السلة <span class="cart-badge">0</span></a>
-    <button class="login-btn" id="loginBtn">👤 تسجيل الدخول</button>
+    <a href="cart.html" class="cart-link">
+      <img src="https://api.iconify.design/mdi:cart.svg?color=%237cb342" alt="" class="nav-icon">
+      السلة <span class="cart-badge">0</span>
+    </a>
+    <button class="login-btn" id="loginBtn">
+      <img src="https://api.iconify.design/mdi:account.svg?color=%23ffffff" alt="" class="nav-icon">
+      تسجيل الدخول
+    </button>
     <div class="user-menu" id="userMenu" style="display:none;">
-      <a href="account.html" id="userNameLink" style="display:flex;align-items:center;gap:6px;">
-        <span id="userName">👤 مستخدم</span>
+      <a href="account.html" id="userNameLink">
+        <span id="userName">مستخدم</span>
       </a>
-      <button id="logoutBtn">خروج</button>
+      <button id="logoutBtn">
+        <img src="https://api.iconify.design/mdi:logout.svg?color=%23ffffff" alt="" class="nav-icon">
+        خروج
+      </button>
     </div>
   </nav>
 </header>
 
-<!-- ============================================
-     الهيرو
-     ============================================ -->
 <section class="hero" id="home">
   <h1>Vinland</h1>
   <p>متجرك الرقمي الأول — حسابات، اشتراكات، وخدمات بأفضل الأسعار.</p>
   <div class="hero-buttons">
     <a href="#products" class="btn">تسوّق الآن</a>
-    <a href="track.html" class="btn-outline">📦 تتبع طلبك</a>
+    <a href="track.html" class="btn-outline">
+      <img src="https://api.iconify.design/mdi:package-variant.svg?color=%23558b2f" alt="" class="btn-icon">
+      تتبع طلبك
+    </a>
   </div>
 </section>
 
-<!-- ============================================
-     شريط الميزات
-     ============================================ -->
 <div class="features-bar">
-  <div class="feature"><span class="feature-icon">⚡</span> تسليم فوري</div>
-  <div class="feature"><span class="feature-icon">🛡️</span> ضمان كامل</div>
-  <div class="feature"><span class="feature-icon">💬</span> دعم 24/7</div>
-  <div class="feature"><span class="feature-icon">💳</span> دفع آمن</div>
+  <div class="feature">
+    <img src="https://api.iconify.design/mdi:lightning-bolt.svg?color=%23ffc107" alt="" class="feature-icon">
+    تسليم فوري
+  </div>
+  <div class="feature">
+    <img src="https://api.iconify.design/mdi:shield-check.svg?color=%237cb342" alt="" class="feature-icon">
+    ضمان كامل
+  </div>
+  <div class="feature">
+    <img src="https://api.iconify.design/mdi:chat.svg?color=%232196f3" alt="" class="feature-icon">
+    دعم 24/7
+  </div>
+  <div class="feature">
+    <img src="https://api.iconify.design/mdi:credit-card.svg?color=%237cb342" alt="" class="feature-icon">
+    دفع آمن
+  </div>
 </div>
 
-<!-- ============================================
-     الأكثر مبيعاً
-     ============================================ -->
 <section class="section" id="best">
-  <h2 class="section-title">🔥 <span>الأكثر مبيعاً</span></h2>
+  <h2 class="section-title">
+    <img src="https://api.iconify.design/mdi:fire.svg?color=%23ff5252" alt="" class="title-icon">
+    <span>الأكثر مبيعاً</span>
+  </h2>
   <p class="section-subtitle">أشهر المنتجات اللي اختارها عملاؤنا</p>
   <div class="best-sellers" id="bestSellers"></div>
 </section>
 
-<!-- ============================================
-     المنتجات
-     ============================================ -->
 <section class="section" id="products">
-  <h2 class="section-title">🛍️ <span>كل المنتجات</span></h2>
+  <h2 class="section-title">
+    <img src="https://api.iconify.design/mdi:shopping.svg?color=%237cb342" alt="" class="title-icon">
+    <span>كل المنتجات</span>
+  </h2>
   <p class="section-subtitle">اختر من تشكيلتنا الواسعة</p>
-
   <div class="filters" id="filters">
     <button class="filter-btn active" data-filter="all">الكل</button>
-    <button class="filter-btn" data-filter="accounts">🎮 حسابات</button>
-    <button class="filter-btn" data-filter="subscriptions">🎬 اشتراكات</button>
-    <button class="filter-btn" data-filter="tools">🛠️ أدوات</button>
+    <button class="filter-btn" data-filter="accounts">
+      <img src="https://api.iconify.design/mdi:gamepad-variant.svg?color=%237cb342" alt="" class="filter-icon">
+      حسابات
+    </button>
+    <button class="filter-btn" data-filter="subscriptions">
+      <img src="https://api.iconify.design/mdi:movie-open.svg?color=%237cb342" alt="" class="filter-icon">
+      اشتراكات
+    </button>
+    <button class="filter-btn" data-filter="tools">
+      <img src="https://api.iconify.design/mdi:tools.svg?color=%237cb342" alt="" class="filter-icon">
+      أدوات
+    </button>
   </div>
-
   <div class="products-grid" id="productsGrid"></div>
 </section>
 
-<!-- ============================================
-     آراء العملاء
-     ============================================ -->
 <section class="section" id="reviews">
-  <h2 class="section-title">⭐ <span>آراء العملاء</span></h2>
+  <h2 class="section-title">
+    <img src="https://api.iconify.design/mdi:star.svg?color=%23ffc107" alt="" class="title-icon">
+    <span>آراء العملاء</span>
+  </h2>
   <p class="section-subtitle">شنو قالوا عنا؟</p>
   <div class="reviews" id="reviewsGrid"></div>
 </section>
 
-<!-- ============================================
-     الأسئلة الشائعة
-     ============================================ -->
 <section class="section" id="faq">
-  <h2 class="section-title">❓ <span>الأسئلة الشائعة</span></h2>
+  <h2 class="section-title">
+    <img src="https://api.iconify.design/mdi:help-circle.svg?color=%237cb342" alt="" class="title-icon">
+    <span>الأسئلة الشائعة</span>
+  </h2>
   <p class="section-subtitle">كل اللي تحتاج تعرفه</p>
   <div class="faq-list" id="faqList"></div>
 </section>
 
-<!-- ============================================
-     تتبع الطلب (سريع)
-     ============================================ -->
-<section class="section" id="track">
-  <h2 class="section-title">📦 <span>تتبع طلبك</span></h2>
-  <p class="section-subtitle">أدخل رقم الطلب لمعرفة حالته</p>
-
-  <div class="track-box">
-    <div class="track-form">
-      <input type="text" id="trackInput" placeholder="مثال: VL-2025-001" />
-      <button onclick="trackOrder()">تتبع</button>
-    </div>
-
-    <div class="timeline" id="timeline">
-      <div class="timeline-step done">
-        <div class="step-dot">✓</div>
-        <div class="step-info">
-          <h4>تم استلام الطلب</h4>
-          <p>2025-01-15 10:30</p>
-        </div>
-      </div>
-      <div class="timeline-step done">
-        <div class="step-dot">✓</div>
-        <div class="step-info">
-          <h4>قيد المعالجة</h4>
-          <p>2025-01-15 10:35</p>
-        </div>
-      </div>
-      <div class="timeline-step">
-        <div class="step-dot">⏳</div>
-        <div class="step-info">
-          <h4>قيد التسليم</h4>
-          <p>جاري تجهيز الطلب...</p>
-        </div>
-      </div>
-      <div class="timeline-step">
-        <div class="step-dot">○</div>
-        <div class="step-info">
-          <h4>تم التسليم</h4>
-          <p>في انتظار الإكمال</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ============================================
-     الفوتر
-     ============================================ -->
 <footer>
   <div class="footer-links">
     <a href="index.html">الرئيسية</a>
@@ -166,46 +136,48 @@
     <a href="terms.html">الشروط</a>
     <a href="privacy.html">الخصوصية</a>
   </div>
-  © 2025 <span>Vinland</span> — كل الحقوق محفوظة 🌿
+  © 2025 <span>Vinland</span> — كل الحقوق محفوظة
 </footer>
 
-<!-- ============================================
-     السلة الجانبية
-     ============================================ -->
 <div class="cart-backdrop" id="cartBackdrop"></div>
 <aside class="cart-drawer" id="cartDrawer">
   <div class="cart-header">
-    <h2>🛒 سلة التسوق</h2>
-    <button class="close-cart" id="closeCart">✕</button>
+    <h2>
+      <img src="https://api.iconify.design/mdi:cart.svg?color=%237cb342" alt="" class="title-icon">
+      سلة التسوق
+    </h2>
+    <button class="close-cart" id="closeCart">
+      <img src="https://api.iconify.design/mdi:close.svg?color=%23558b2f" alt="">
+    </button>
   </div>
   <div class="cart-items" id="cartItems"></div>
   <div class="cart-footer" id="cartFooter"></div>
 </aside>
 
-<!-- ============================================
-     زر واتساب
-     ============================================ -->
-<a href="https://wa.me/0000000000" target="_blank" class="whatsapp-float">💬</a>
+<a href="https://wa.me/0000000000" target="_blank" class="whatsapp-float">
+  <img src="https://api.iconify.design/mdi:whatsapp.svg?color=%23ffffff" alt="واتساب">
+</a>
 
-<!-- ============================================
-     Modal تسجيل الدخول
-     ============================================ -->
 <div class="auth-modal" id="authModal">
   <div class="auth-backdrop" id="authBackdrop"></div>
   <div class="auth-box">
-    <button class="auth-close" id="authClose">✕</button>
-    <div class="auth-logo">🌿 Vin<span>land</span></div>
+    <button class="auth-close" id="authClose">
+      <img src="https://api.iconify.design/mdi:close.svg?color=%23558b2f" alt="">
+    </button>
+    <div class="auth-logo">
+      <img src="https://api.iconify.design/mdi:leaf.svg?color=%237cb342" alt="" class="logo-icon-lg">
+      Vin<span>land</span>
+    </div>
     <h2>مرحباً بك</h2>
     <p>سجل دخولك للاستفادة من كل الميزات</p>
-
     <button class="social-btn facebook" id="fbLoginBtn">
-      <span>📘</span> تسجيل الدخول بفيسبوك
+      <img src="https://api.iconify.design/mdi:facebook.svg?color=%231877f2" alt="" class="social-icon">
+      تسجيل الدخول بفيسبوك
     </button>
-
     <button class="social-btn google" id="ggLoginBtn">
-      <span>🔍</span> تسجيل الدخول بجوجل
+      <img src="https://api.iconify.design/mdi:google.svg?color=%234285f4" alt="" class="social-icon">
+      تسجيل الدخول بجوجل
     </button>
-
     <p class="auth-terms">
       بمتابعتك، أنت توافق على
       <a href="terms.html">الشروط</a> و
@@ -214,18 +186,9 @@
   </div>
 </div>
 
-<!-- ============================================
-     إشعار
-     ============================================ -->
 <div class="toast" id="toast"></div>
 
-<!-- ============================================
-     السكربتات
-     ============================================ -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="products.js"></script>
-<script src="cart.js"></script>
-<script src="main.js"></script>
-
+<script src="script.js"></script>
 </body>
 </html>
