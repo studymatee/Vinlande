@@ -8,29 +8,40 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Tajawal:wght@400;700;900&family=Amiri:wght@700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <header>
-  <div class="logo"><a href="index.html">🌿 Vin<span>land</span></a></div>
+  <div class="logo">
+    <a href="index.html">
+      <img src="https://api.iconify.design/mdi:leaf.svg?color=%237cb342" alt="" class="logo-icon">
+      Vin<span>land</span>
+    </a>
+  </div>
   <nav>
     <a href="index.html">الرئيسية</a>
     <a href="index.html#products">المنتجات</a>
-    <a href="index.html#faq">الأسئلة</a>
-    <a href="track.html">تتبع الطلب</a>
-    <a href="cart.html" class="cart-link">🛒 السلة <span class="cart-badge">0</span></a>
-    <button class="login-btn" id="loginBtn">👤 دخول</button>
+    <a href="cart.html" class="cart-link">
+      <img src="https://api.iconify.design/mdi:cart.svg?color=%237cb342" alt="" class="nav-icon">
+      السلة <span class="cart-badge">0</span>
+    </a>
+    <button class="login-btn" id="loginBtn">
+      <img src="https://api.iconify.design/mdi:account.svg?color=%23ffffff" alt="" class="nav-icon">
+      تسجيل الدخول
+    </button>
     <div class="user-menu" id="userMenu" style="display:none;">
-      <span id="userName">👤</span>
-      <button id="logoutBtn">خروج</button>
+      <span id="userName">مستخدم</span>
+      <button id="logoutBtn">
+        <img src="https://api.iconify.design/mdi:logout.svg?color=%23ffffff" alt="" class="nav-icon">
+        خروج
+      </button>
     </div>
   </nav>
 </header>
 
-<main class="account-page" id="accountPage">
-  <!-- يتم تعبئتها بالـ JS -->
-</main>
+<main class="account-page" id="accountPage"></main>
 
 <footer>
   <div class="footer-links">
@@ -41,35 +52,44 @@
     <a href="terms.html">الشروط</a>
     <a href="privacy.html">الخصوصية</a>
   </div>
-  © 2025 <span>Vinland</span> — كل الحقوق محفوظة 🌿
+  © 2025 <span>Vinland</span> — كل الحقوق محفوظة
 </footer>
 
-<a href="https://wa.me/0000000000" target="_blank" class="whatsapp-float">💬</a>
-
-<div class="toast" id="toast"></div>
+<a href="https://wa.me/0000000000" target="_blank" class="whatsapp-float">
+  <img src="https://api.iconify.design/mdi:whatsapp.svg?color=%23ffffff" alt="واتساب">
+</a>
 
 <div class="auth-modal" id="authModal">
   <div class="auth-backdrop" id="authBackdrop"></div>
   <div class="auth-box">
-    <button class="auth-close" id="authClose">✕</button>
-    <div class="auth-logo">🌿 Vin<span>land</span></div>
+    <button class="auth-close" id="authClose">
+      <img src="https://api.iconify.design/mdi:close.svg?color=%23558b2f" alt="">
+    </button>
+    <div class="auth-logo">
+      <img src="https://api.iconify.design/mdi:leaf.svg?color=%237cb342" alt="" class="logo-icon-lg">
+      Vin<span>land</span>
+    </div>
     <h2>مرحباً بك</h2>
     <p>سجل دخولك لعرض حسابك</p>
     <button class="social-btn facebook" id="fbLoginBtn">
-      <span>📘</span> تسجيل الدخول بفيسبوك
+      <img src="https://api.iconify.design/mdi:facebook.svg?color=%231877f2" alt="" class="social-icon">
+      تسجيل الدخول بفيسبوك
     </button>
     <button class="social-btn google" id="ggLoginBtn">
-      <span>🔍</span> تسجيل الدخول بجوجل
+      <img src="https://api.iconify.design/mdi:google.svg?color=%234285f4" alt="" class="social-icon">
+      تسجيل الدخول بجوجل
     </button>
     <p class="auth-terms">
-      بمتابعتك، أنت توافق على <a href="terms.html">الشروط</a> و <a href="privacy.html">سياسة الخصوصية</a>
+      بمتابعتك، أنت توافق على
+      <a href="terms.html">الشروط</a> و
+      <a href="privacy.html">سياسة الخصوصية</a>
     </p>
   </div>
 </div>
 
+<div class="toast" id="toast"></div>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="products.js"></script>
-<script src="main.js"></script>
-<script src="account.js"></script>
+<script src="script.js"></script>
 </body>
 </html>
