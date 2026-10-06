@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Saga Store — متجر الشمال</title>
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+  }
+
+  html, body {
+    height: 100%;
+    overflow-x: hidden;
+    background: #0a1f14;
+    color: #eafff5;
+  }
+
+  /* ===== الفيديو الخلفي ===== */
+  .bg-video {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -4;
+    filter: brightness(0.45) saturate(1.3) contrast(1.05) hue-rotate(-8deg);
+    pointer-events: none;
+  }
+
+  /* طبقة خضراء + تعتيم فوق الفيديو */
+  .bg-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: -3;
+    background:
+      linear-gradient(180deg,
+        rgba(4, 20, 12, 0.75) 0%,
+        rgba(10, 31, 20, 0.45) 50%,
+        rgba(4, 20, 12, 0.85) 100%),
+      radial-gradient(circle at 50% 50%,
+        rgba(46, 204, 113, 0.15), transparent 70%);
+    pointer-events: none;
+  }
+
+  /* ضباب متحرك */
+  .fog {
+    position: fixed;
+    inset: -20%;
+    z-index: -2;
+    background:
+      radial-gradient(ellipse at 30% 40%, rgba(120, 255, 180, 0.12), transparent 60%),
+      radial-gradient(ellipse at 70% 60%, rgba(80, 200, 140, 0.10), transparent 60%);
+    filter: blur(80px);
+    animation: fogMove 25s ease-in-out infinite alternate;
+    pointer-events: none;
+  }
+
+  @keyframes fogMove {
+    0%   { transform: translate(0, 0) scale(1); }
+    100% { transform: translate(-60px, 40px) scale(1.15); }
+  }
+
+  /* جزيئات ثلج/شرر */
+  .particles {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  .particle {
+    position: absolute;
+    top: -10px;
+    background: rgba(200, 255, 220, 0.7);
+    border-radius: 50%;
+    box-shadow: 0 0 8px rgba(150, 255, 200, 0.8);
+    animation: fall linear infinite;
+  }
+
+  @keyframes fall {
+    0%   { transform: translateY(-10vh) translateX(0); opacity: 0; }
+    10%  { opacity: 1; }
+    90%  { opacity: 1; }
+    100% { transform: translateY(110vh) translateX(40px); opacity: 0; }
+  }
+
+  /* ===== الهيدر ===== */
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    background: rgba(10, 31, 20, 0.55);
+    border-bottom: 1px solid rgba(120, 255, 180, 0.15);
+    padding: 16px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .logo {
+    font-size: 24px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    background: linear-gradient(90deg, #7dffb0, #2ecc71, #a8ffce);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-shadow: 0 0 30px rgba(120, 255, 180, 0.4);
+  }
+
+  nav a {
+    color: #d4ffe6;
+    text-decoration: none;
+    margin: 0 14px;
+    font-weight: 500;
+    transition: 0.3s;
+  }
+
+  nav a:hover {
+    color: #7dffb0;
+    text-shadow: 0 0 12px rgba(120, 255, 180, 0.8);
+  }
+
+  /* ===== الهيرو ===== */
+  .hero {
+    text-align: center;
+    padding: 120px 20px 80px;
+    position: relative;
+  }
+
+  .hero h1 {
+    font-size: clamp(36px, 6vw, 72px);
+    font-weight: 900;
+    margin-bottom: 20px;
+    background: linear-gradient(90deg, #a8ffce, #2ecc71, #7dffb0);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    filter: drop-shadow(0 0 25px rgba(120, 255, 180, 0.5));
+    animation: glow 4s ease-in-out infinite alternate;
+  }
+
+  @keyframes glow {
+    from { filter: drop-shadow(0 0 15px rgba(120, 255, 180, 0.4)); }
+    to   { filter: drop-shadow(0 0 40px rgba(120, 255, 180, 0.8)); }
+  }
+
+  .hero p {
+    font-size: 18px;
+    color: #d4ffe6;
+    max-width: 600px;
+    margin: 0 auto 30px;
+    line-height: 1.7;
+    text-shadow: 0 2px 15px rgba(0,0,0,0.8);
+  }
+
+  .btn {
+    display: inline-block;
+    padding: 14px 36px;
+    background: linear-gradient(135deg, #2ecc71, #1f9e57);
+    color: #04140c;
+    font-weight: 700;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    font-size: 16px;
+    text-decoration: none;
+    box-shadow: 0 0 30px rgba(46, 204, 113, 0.5);
+    transition: 0.3s;
+  }
+
+  .btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 0 50px rgba(120, 255, 180, 0.9);
+  }
+
+  /* ===== المنتجات ===== */
+  .products {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 28px;
+    padding: 60px 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .card {
+    background: rgba(20, 60, 40, 0.35);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border: 1px solid rgba(120, 255, 180, 0.18);
+    border-radius: 20px;
+    padding: 20px;
+    transition: 0.4s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card:hover {
+    transform: translateY(-8px);
+    border-color: rgba(120, 255, 180, 0.6);
+    box-shadow: 0 20px 60px rgba(46, 204, 113, 0.3);
+  }
+
+  .card .img {
+    width: 100%;
+    height: 180px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #1f6b3a, #0e4d2b);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 60px;
+    margin-bottom: 16px;
+    box-shadow: inset 0 0 30px rgba(0,0,0,0.4);
+  }
+
+  .card h3 {
+    font-size: 20px;
+    margin-bottom: 8px;
+    color: #eafff5;
+  }
+
+  .card p {
+    font-size: 14px;
+    color: #9fcfb5;
+    margin-bottom: 16px;
+    line-height: 1.6;
+  }
+
+  .card .price-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .price {
+    font-size: 22px;
+    font-weight: 800;
+    color: #7dffb0;
+    text-shadow: 0 0 15px rgba(120, 255, 180, 0.6);
+  }
+
+  .add-btn {
+    padding: 10px 20px;
+    background: rgba(46, 204, 113, 0.2);
+    border: 1px solid rgba(120, 255, 180, 0.5);
+    color: #a8ffce;
+    border-radius: 30px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: 0.3s;
+  }
+
+  .add-btn:hover {
+    background: #2ecc71;
+    color: #04140c;
+    box-shadow: 0 0 25px rgba(120, 255, 180, 0.8);
+  }
+
+  /* ===== الفوتر ===== */
+  footer {
+    text-align: center;
+    padding: 40px 20px;
+    color: #6fa887;
+    border-top: 1px solid rgba(120, 255, 180, 0.1);
+    margin-top: 40px;
+    backdrop-filter: blur(10px);
+    background: rgba(4, 20, 12, 0.4);
+  }
+
+  /* ===== إشعار ===== */
+  .toast {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: rgba(20, 60, 40, 0.9);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(120, 255, 180, 0.5);
+    color: #a8ffce;
+    padding: 14px 28px;
+    border-radius: 50px;
+    font-weight: 600;
+    box-shadow: 0 0 40px rgba(46, 204, 113, 0.5);
+    transition: 0.4s;
+    z-index: 100;
+    opacity: 0;
+  }
+
+  .toast.show {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+  }
+
+  .cart-badge {
+    display: inline-block;
+    background: #2ecc71;
+    color: #04140c;
+    border-radius: 50%;
+    padding: 2px 8px;
+    font-size: 12px;
+    font-weight: 800;
+    margin-right: 6px;
+  }
+
+  @media (max-width: 600px) {
+    header { padding: 14px 20px; }
+    nav a { margin: 0 8px; font-size: 14px; }
+    .products { padding: 40px 20px; }
+    .logo { font-size: 18px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- 🎬 الفيديو الخلفي -->
+<video class="bg-video" autoplay muted loop playsinline preload="auto">
+  <source src="background.mp4" type="video/mp4">
+</video>
+
+<!-- طبقات التأثير -->
+<div class="bg-overlay"></div>
+<div class="fog"></div>
+<div class="particles" id="particles"></div>
+
+<!-- الهيدر -->
+<header>
+  <div class="logo">⚔️ SAGA STORE</div>
+  <nav>
+    <a href="#">الرئيسية</a>
+    <a href="#products">المنتجات</a>
+    <a href="#">تواصل</a>
+    <a href="#" id="cartLink">🛒 السلة <span class="cart-badge" id="cartCount">0</span></a>
+  </nav>
+</header>
+
+<!-- الهيرو -->
+<section class="hero">
+  <h1>أرض المحاربين</h1>
+  <p>منتجات مستوحاة من عالم الفايكنغ — قوة، حرية، ومغامرة لا تنتهي.</p>
+  <a href="#products" class="btn">تسوّق الآن</a>
+</section>
+
+<!-- المنتجات -->
+<section class="products" id="products">
+
+  <div class="card">
+    <div class="img">🪓</div>
+    <h3>فأس الفايكنغ</h3>
+    <p>فأس مصنوع يدوياً بتصميم شمالي أصيل.</p>
+    <div class="price-row">
+      <span class="price">$49</span>
+      <button class="add-btn" data-name="فأس الفايكنغ">أضف للسلة</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="img">🛡️</div>
+    <h3>درع المحارب</h3>
+    <p>درع خشبي بنقوش رونية قديمة.</p>
+    <div class="price-row">
+      <span class="price">$79</span>
+      <button class="add-btn" data-name="درع المحارب">أضف للسلة</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="img">⚔️</div>
+    <h3>سيف الثأر</h3>
+    <p>سيف حاد بتصميم أنيق وحقيبة جلدية.</p>
+    <div class="price-row">
+      <span class="price">$120</span>
+      <button class="add-btn" data-name="سيف الثأر">أضف للسلة</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="img">🧭</div>
+    <h3>بوصلة المستكشف</h3>
+    <p>بوصلة نحاسية للبحث عن أرض جديدة.</p>
+    <div class="price-row">
+      <span class="price">$35</span>
+      <button class="add-btn" data-name="بوصلة المستكشف">أضف للسلة</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="img">🍺</div>
+    <h3>كوب الميد</h3>
+    <p>كوب خشبي منقوش للاحتفال مع الرفاق.</p>
+    <div class="price-row">
+      <span class="price">$25</span>
+      <button class="add-btn" data-name="كوب الميد">أضف للسلة</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="img">📜</div>
+    <h3>خريطة فينلاند</h3>
+    <p>خريطة قديمة على ورق معتّق.</p>
+    <div class="price-row">
+      <span class="price">$19</span>
+      <button class="add-btn" data-name="خريطة فينلاند">أضف للسلة</button>
+    </div>
+  </div>
+
+</section>
+
+<!-- الفوتر -->
+<footer>
+  © 2025 SAGA STORE — كل الحقوق محفوظة ⚔️
+</footer>
+
+<!-- إشعار -->
+<div class="toast" id="toast">تمت الإضافة للسلة ✓</div>
+
+<script>
+  /* ===== الجزيئات ===== */
+  const particlesEl = document.getElementById('particles');
+  const count = 60;
+
+  for (let i = 0; i < count; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    const size = Math.random() * 3 + 1;
+    p.style.width = size + 'px';
+    p.style.height = size + 'px';
+    p.style.left = Math.random() * 100 + '%';
+    p.style.animationDuration = (Math.random() * 8 + 6) + 's';
+    p.style.animationDelay = (Math.random() * 10) + 's';
+    p.style.opacity = Math.random() * 0.7 + 0.3;
+    particlesEl.appendChild(p);
+  }
+
+  /* ===== السلة ===== */
+  let cart = JSON.parse(localStorage.getItem('saga_cart') || '[]');
+  const cartCount = document.getElementById('cartCount');
+  const toast = document.getElementById('toast');
+
+  function updateCart() {
+    cartCount.textContent = cart.length;
+    localStorage.setItem('saga_cart', JSON.stringify(cart));
+  }
+
+  function showToast(msg) {
+    toast.textContent = msg;
+    toast.classList.add('show');
+    clearTimeout(toast._t);
+    toast._t = setTimeout(() => toast.classList.remove('show'), 2000);
+  }
+
+  document.querySelectorAll('.add-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      cart.push(btn.dataset.name);
+      updateCart();
+      showToast('✓ تمت إضافة ' + btn.dataset.name);
+    });
+  });
+
+  document.getElementById('cartLink').addEventListener('click', (e) => {
+    e.preventDefault();
+    if (cart.length === 0) {
+      showToast('السلة فارغة');
+    } else {
+      showToast('لديك ' + cart.length + ' منتج في السلة');
+    }
+  });
+
+  updateCart();
+
+  /* ===== لو الفيديو ما اشتغل (autoplay محظور) ===== */
+  const video = document.querySelector('.bg-video');
+  video.addEventListener('loadeddata', () => {
+    video.play().catch(() => {
+      // بعض المتصفحات تمنع autoplay
+      console.warn('Autoplay blocked — الفيديو رح يشتغل بعد أول تفاعل');
+      document.body.addEventListener('click', () => video.play(), { once: true });
+    });
+  });
+</script>
+
+</body>
+</html>
