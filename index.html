@@ -4,15 +4,21 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Vinland — متجر رقمي</title>
+
 <link rel="icon" type="image/png" href="logo.png">
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Tajawal:wght@400;700;900&family=Amiri:wght@700&display=swap" rel="stylesheet">
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
+<!-- ============================================
+     الهيدر
+     ============================================ -->
 <header>
   <div class="logo">
     <a href="index.html">
@@ -45,6 +51,9 @@
   </nav>
 </header>
 
+<!-- ============================================
+     الهيرو
+     ============================================ -->
 <section class="hero" id="home">
   <h1>Vinland</h1>
   <p>متجرك الرقمي الأول — حسابات، اشتراكات، وخدمات بأفضل الأسعار.</p>
@@ -57,6 +66,9 @@
   </div>
 </section>
 
+<!-- ============================================
+     شريط الميزات
+     ============================================ -->
 <div class="features-bar">
   <div class="feature">
     <img src="https://api.iconify.design/mdi:lightning-bolt.svg?color=%23ffc107" alt="" class="feature-icon">
@@ -76,7 +88,10 @@
   </div>
 </div>
 
-<section class="section" id="best">
+<!-- ============================================
+     الأكثر مبيعاً
+     ============================================ -->
+<section class="section fade-in-up" id="best">
   <h2 class="section-title">
     <img src="https://api.iconify.design/mdi:fire.svg?color=%23ff5252" alt="" class="title-icon">
     <span>الأكثر مبيعاً</span>
@@ -85,12 +100,16 @@
   <div class="best-sellers" id="bestSellers"></div>
 </section>
 
-<section class="section" id="products">
+<!-- ============================================
+     المنتجات
+     ============================================ -->
+<section class="section fade-in-up" id="products">
   <h2 class="section-title">
     <img src="https://api.iconify.design/mdi:shopping.svg?color=%237cb342" alt="" class="title-icon">
     <span>كل المنتجات</span>
   </h2>
   <p class="section-subtitle">اختر من تشكيلتنا الواسعة</p>
+
   <div class="filters" id="filters">
     <button class="filter-btn active" data-filter="all">الكل</button>
     <button class="filter-btn" data-filter="accounts">
@@ -106,10 +125,14 @@
       أدوات
     </button>
   </div>
+
   <div class="products-grid" id="productsGrid"></div>
 </section>
 
-<section class="section" id="reviews">
+<!-- ============================================
+     آراء العملاء
+     ============================================ -->
+<section class="section fade-in-up" id="reviews">
   <h2 class="section-title">
     <img src="https://api.iconify.design/mdi:star.svg?color=%23ffc107" alt="" class="title-icon">
     <span>آراء العملاء</span>
@@ -118,7 +141,10 @@
   <div class="reviews" id="reviewsGrid"></div>
 </section>
 
-<section class="section" id="faq">
+<!-- ============================================
+     الأسئلة الشائعة
+     ============================================ -->
+<section class="section fade-in-up" id="faq">
   <h2 class="section-title">
     <img src="https://api.iconify.design/mdi:help-circle.svg?color=%237cb342" alt="" class="title-icon">
     <span>الأسئلة الشائعة</span>
@@ -127,18 +153,85 @@
   <div class="faq-list" id="faqList"></div>
 </section>
 
+<!-- ============================================
+     تتبع الطلب السريع
+     ============================================ -->
+<section class="section fade-in-up" id="track">
+  <h2 class="section-title">
+    <img src="https://api.iconify.design/mdi:package-variant.svg?color=%237cb342" alt="" class="title-icon">
+    <span>تتبع طلبك</span>
+  </h2>
+  <p class="section-subtitle">أدخل رقم الطلب لمعرفة حالته</p>
+
+  <div class="track-box">
+    <div class="track-form">
+      <input type="text" id="trackInput" placeholder="مثال: VL-2025-001" />
+      <button onclick="trackOrder()">
+        <img src="https://api.iconify.design/mdi:magnify.svg?color=%23ffffff" alt="" class="btn-icon">
+        تتبع
+      </button>
+    </div>
+
+    <div class="timeline" id="timeline">
+      <div class="timeline-step done">
+        <div class="step-dot">
+          <img src="https://api.iconify.design/mdi:check.svg?color=%23ffffff" alt="">
+        </div>
+        <div class="step-info">
+          <h4>تم استلام الطلب</h4>
+          <p>2025-01-15 10:30</p>
+        </div>
+      </div>
+      <div class="timeline-step done">
+        <div class="step-dot">
+          <img src="https://api.iconify.design/mdi:check.svg?color=%23ffffff" alt="">
+        </div>
+        <div class="step-info">
+          <h4>قيد المعالجة</h4>
+          <p>2025-01-15 10:35</p>
+        </div>
+      </div>
+      <div class="timeline-step">
+        <div class="step-dot">
+          <img src="https://api.iconify.design/mdi:clock-outline.svg?color=%23757575" alt="">
+        </div>
+        <div class="step-info">
+          <h4>قيد التسليم</h4>
+          <p>جاري تجهيز الطلب...</p>
+        </div>
+      </div>
+      <div class="timeline-step">
+        <div class="step-dot">
+          <img src="https://api.iconify.design/mdi:circle-outline.svg?color=%23757575" alt="">
+        </div>
+        <div class="step-info">
+          <h4>تم التسليم</h4>
+          <p>في انتظار الإكمال</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     الفوتر
+     ============================================ -->
 <footer>
   <div class="footer-links">
     <a href="index.html">الرئيسية</a>
     <a href="#products">المنتجات</a>
     <a href="cart.html">السلة</a>
     <a href="track.html">تتبع الطلب</a>
+    <a href="orders.html">طلباتي</a>
     <a href="terms.html">الشروط</a>
     <a href="privacy.html">الخصوصية</a>
   </div>
   © 2025 <span>Vinland</span> — كل الحقوق محفوظة
 </footer>
 
+<!-- ============================================
+     السلة الجانبية
+     ============================================ -->
 <div class="cart-backdrop" id="cartBackdrop"></div>
 <aside class="cart-drawer" id="cartDrawer">
   <div class="cart-header">
@@ -154,10 +247,16 @@
   <div class="cart-footer" id="cartFooter"></div>
 </aside>
 
+<!-- ============================================
+     زر واتساب
+     ============================================ -->
 <a href="https://wa.me/0000000000" target="_blank" class="whatsapp-float">
   <img src="https://api.iconify.design/mdi:whatsapp.svg?color=%23ffffff" alt="واتساب">
 </a>
 
+<!-- ============================================
+     Modal تسجيل الدخول
+     ============================================ -->
 <div class="auth-modal" id="authModal">
   <div class="auth-backdrop" id="authBackdrop"></div>
   <div class="auth-box">
@@ -170,14 +269,17 @@
     </div>
     <h2>مرحباً بك</h2>
     <p>سجل دخولك للاستفادة من كل الميزات</p>
+
     <button class="social-btn facebook" id="fbLoginBtn">
       <img src="https://api.iconify.design/mdi:facebook.svg?color=%231877f2" alt="" class="social-icon">
       تسجيل الدخول بفيسبوك
     </button>
+
     <button class="social-btn google" id="ggLoginBtn">
       <img src="https://api.iconify.design/mdi:google.svg?color=%234285f4" alt="" class="social-icon">
       تسجيل الدخول بجوجل
     </button>
+
     <p class="auth-terms">
       بمتابعتك، أنت توافق على
       <a href="terms.html">الشروط</a> و
@@ -186,9 +288,16 @@
   </div>
 </div>
 
+<!-- ============================================
+     إشعار
+     ============================================ -->
 <div class="toast" id="toast"></div>
 
+<!-- ============================================
+     السكربتات
+     ============================================ -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="script.js"></script>
+
 </body>
 </html>
