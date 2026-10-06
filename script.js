@@ -2,6 +2,69 @@
    Vinland Store — script.js
    كل الوظائف في ملف واحد
    ============================================ */
+/* ============================================
+   Supabase Config
+   ============================================ */
+const SUPABASE_URL = 'https://ncrycgbrstafdouvipzc.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_6t2dkU27Rkinsoo8MhYAEQ_FSgj4G73';
+
+let sb = null;
+if (window.supabase) {
+  sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+}
+
+/* ============================================
+   جلب المنتجات من Supabase
+   ============================================ */
+let PRODUCTS = []; // ← يتغير ليصير let بدل const
+
+const FALLBACK_PRODUCTS = [
+  // كل المنتجات القديمة هنا (كاحتياطي)
+];
+
+async function fetchProducts() {
+  if (!sb) {
+    console.warn('Supabase not loaded, using fallback products');
+    PRODUCTS = FALLBACK_PRODUCTS;
+    return;
+  }
+
+  try {
+    const { data, error } = await sb
+      .from('products')
+      .select('*')
+      .eq('active', true)
+      .order('id', { ascending: true });
+
+    if (error) throw error;
+
+    if (data && data.length > 0) {
+      // تحويل من صيغة Supabase لصيغة موقعنا
+      PRODUCTS = data.map(p => ({
+        id: p.id,
+        name: p.name,
+        desc: p.description,
+        longDesc: p.long_description,
+        price: parseFloat(p.price),
+        category: p.category,
+        img: p.image_url,
+        badge: p.badge,
+        rating: p.rating,
+        reviews: p.reviews_count,
+        stock: p.stock,
+        bestSeller: p.best_seller,
+        features: p.features || []
+      }));
+      console.log('✅ Loaded', PRODUCTS.length, 'products from Supabase');
+    } else {
+      console.warn('No products in Supabase, using fallback');
+      PRODUCTS = FALLBACK_PRODUCTS;
+    }
+  } catch (err) {
+    console.error('Error fetching products:', err);
+    PRODUCTS = FALLBACK_PRODUCTS;
+  }
+}
 
 /* ============================================
    بيانات المنتجات
