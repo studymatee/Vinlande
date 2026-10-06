@@ -4,505 +4,123 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Vinland — متجر رقمي</title>
-
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Tajawal:wght@400;700;900&family=Amiri:wght@700&display=swap" rel="stylesheet">
-
-<style>
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Cairo', 'Tajawal', sans-serif;
-  }
-
-  :root {
-    --grass: #a8e063;
-    --grass-dark: #7cb342;
-    --grass-light: #d4f5a8;
-    --white: #ffffff;
-    --soft: #f0fff0;
-  }
-
-  html, body {
-    min-height: 100%;
-    overflow-x: hidden;
-    background: #0a1f14;
-    color: var(--white);
-  }
-
-  /* ===== الخلفية ===== */
-  .bg-image {
-    position: fixed;
-    top: -5%;
-    left: -5%;
-    width: 110vw;
-    height: 110vh;
-    background: #0a1f14 url('background.jpg') center center / cover no-repeat;
-    z-index: -3;
-    filter: brightness(0.4) saturate(1.3) blur(7px);
-    animation: blurPulse 15s ease-in-out infinite alternate;
-    pointer-events: none;
-  }
-
-  @keyframes blurPulse {
-    from { filter: brightness(0.4) saturate(1.3) blur(6px); }
-    to   { filter: brightness(0.5) saturate(1.4) blur(11px); }
-  }
-
-  .overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: -2;
-    background: linear-gradient(
-      180deg,
-      rgba(4, 20, 12, 0.7) 0%,
-      rgba(10, 31, 20, 0.4) 50%,
-      rgba(4, 20, 12, 0.8) 100%
-    );
-    pointer-events: none;
-  }
-
-  /* ===== الهيدر ===== */
-  header {
-    position: sticky;
-    top: 0;
-    z-index: 10;
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    background: rgba(10, 31, 20, 0.5);
-    border-bottom: 1px solid rgba(168, 224, 99, 0.25);
-    padding: 16px 40px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .logo {
-    font-family: 'Amiri', serif;
-    font-size: 30px;
-    font-weight: 700;
-    letter-spacing: 1px;
-    color: var(--white);
-    text-shadow:
-      0 0 15px rgba(168, 224, 99, 0.8),
-      0 0 30px rgba(168, 224, 99, 0.5);
-  }
-
-  .logo span {
-    color: var(--grass);
-  }
-
-  nav a {
-    color: var(--white);
-    text-decoration: none;
-    margin: 0 14px;
-    font-weight: 600;
-    font-size: 15px;
-    transition: 0.3s;
-    text-shadow: 0 2px 8px rgba(0,0,0,0.6);
-  }
-
-  nav a:hover {
-    color: var(--grass);
-    text-shadow: 0 0 15px rgba(168, 224, 99, 0.9);
-  }
-
-  /* ===== الهيرو ===== */
-  .hero {
-    text-align: center;
-    padding: 120px 20px 80px;
-    position: relative;
-  }
-
-  .hero h1 {
-    font-family: 'Amiri', serif;
-    font-size: clamp(40px, 8vw, 90px);
-    font-weight: 700;
-    margin-bottom: 24px;
-    color: var(--white);
-    text-shadow:
-      0 0 20px rgba(255, 255, 255, 0.5),
-      0 0 40px rgba(168, 224, 99, 0.6),
-      0 0 70px rgba(168, 224, 99, 0.4);
-    animation: glow 4s ease-in-out infinite alternate;
-  }
-
-  @keyframes glow {
-    from {
-      text-shadow:
-        0 0 15px rgba(255, 255, 255, 0.4),
-        0 0 30px rgba(168, 224, 99, 0.5);
-    }
-    to {
-      text-shadow:
-        0 0 25px rgba(255, 255, 255, 0.7),
-        0 0 55px rgba(168, 224, 99, 0.8),
-        0 0 90px rgba(168, 224, 99, 0.5);
-    }
-  }
-
-  .hero p {
-    font-size: 19px;
-    color: var(--soft);
-    max-width: 620px;
-    margin: 0 auto 34px;
-    line-height: 1.8;
-    text-shadow: 0 2px 12px rgba(0,0,0,0.8);
-  }
-
-  .btn {
-    display: inline-block;
-    padding: 15px 42px;
-    background: linear-gradient(135deg, var(--grass), var(--grass-dark));
-    color: #0a1f14;
-    font-weight: 800;
-    border: none;
-    border-radius: 50px;
-    cursor: pointer;
-    font-size: 16px;
-    text-decoration: none;
-    box-shadow:
-      0 0 25px rgba(168, 224, 99, 0.6),
-      0 0 50px rgba(168, 224, 99, 0.3);
-    transition: 0.3s;
-  }
-
-  .btn:hover {
-    transform: translateY(-3px);
-    box-shadow:
-      0 0 45px rgba(168, 224, 99, 0.95),
-      0 0 80px rgba(168, 224, 99, 0.6);
-    color: #04140c;
-  }
-
-  /* ===== المنتجات ===== */
-  .products {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 28px;
-    padding: 60px 40px;
-    max-width: 1200px;
-    margin: 0 auto;
-  }
-
-  .card {
-    background: rgba(10, 31, 20, 0.5);
-    backdrop-filter: blur(18px);
-    -webkit-backdrop-filter: blur(18px);
-    border: 1px solid rgba(168, 224, 99, 0.35);
-    border-radius: 20px;
-    padding: 22px;
-    transition: 0.4s;
-    position: relative;
-  }
-
-  .card:hover {
-    transform: translateY(-8px);
-    border-color: var(--grass);
-    box-shadow:
-      0 20px 60px rgba(168, 224, 99, 0.35),
-      0 0 40px rgba(168, 224, 99, 0.25);
-  }
-
-  /* شارة */
-  .badge {
-    position: absolute;
-    top: 12px;
-    left: 12px;
-    background: var(--grass);
-    color: #0a1f14;
-    font-size: 11px;
-    font-weight: 900;
-    padding: 4px 10px;
-    border-radius: 20px;
-    box-shadow: 0 0 15px rgba(168, 224, 99, 0.7);
-  }
-
-  .badge.hot { background: #ff5252; color: #fff; }
-  .badge.new { background: #fff; color: #0a1f14; }
-
-  .card .img {
-    width: 100%;
-    height: 180px;
-    border-radius: 14px;
-    background: linear-gradient(135deg, #1f6b3a, #0e4d2b);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 64px;
-    margin-bottom: 16px;
-    box-shadow: inset 0 0 30px rgba(0,0,0,0.5);
-    border: 1px solid rgba(168, 224, 99, 0.25);
-  }
-
-  .card h3 {
-    font-family: 'Tajawal', sans-serif;
-    font-size: 21px;
-    font-weight: 700;
-    margin-bottom: 8px;
-    color: var(--white);
-    text-shadow: 0 0 12px rgba(168, 224, 99, 0.4);
-  }
-
-  .card p {
-    font-size: 14px;
-    color: var(--soft);
-    margin-bottom: 16px;
-    line-height: 1.7;
-    opacity: 0.9;
-  }
-
-  .card .price-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .price {
-    font-family: 'Tajawal', sans-serif;
-    font-size: 24px;
-    font-weight: 900;
-    color: var(--grass);
-    text-shadow: 0 0 15px rgba(168, 224, 99, 0.7);
-  }
-
-  .add-btn {
-    padding: 10px 22px;
-    background: rgba(168, 224, 99, 0.15);
-    border: 1px solid var(--grass);
-    color: var(--grass);
-    border-radius: 30px;
-    cursor: pointer;
-    font-weight: 700;
-    font-size: 14px;
-    transition: 0.3s;
-  }
-
-  .add-btn:hover {
-    background: var(--grass);
-    color: #0a1f14;
-    border-color: var(--grass);
-    box-shadow: 0 0 25px rgba(168, 224, 99, 0.9);
-  }
-
-  /* ===== الفوتر ===== */
-  footer {
-    text-align: center;
-    padding: 40px 20px;
-    color: var(--soft);
-    border-top: 1px solid rgba(168, 224, 99, 0.25);
-    margin-top: 40px;
-    backdrop-filter: blur(10px);
-    background: rgba(4, 20, 12, 0.5);
-  }
-
-  footer span {
-    color: var(--grass);
-    font-weight: 700;
-  }
-
-  /* ===== إشعار ===== */
-  .toast {
-    position: fixed;
-    bottom: 30px;
-    left: 50%;
-    transform: translateX(-50%) translateY(100px);
-    background: rgba(10, 31, 20, 0.95);
-    backdrop-filter: blur(20px);
-    border: 1px solid var(--grass);
-    color: var(--grass);
-    padding: 14px 30px;
-    border-radius: 50px;
-    font-weight: 700;
-    box-shadow: 0 0 40px rgba(168, 224, 99, 0.6);
-    transition: 0.4s;
-    z-index: 100;
-    opacity: 0;
-  }
-
-  .toast.show {
-    transform: translateX(-50%) translateY(0);
-    opacity: 1;
-  }
-
-  .cart-badge {
-    display: inline-block;
-    background: var(--grass);
-    color: #0a1f14;
-    border-radius: 50%;
-    padding: 2px 9px;
-    font-size: 12px;
-    font-weight: 900;
-    margin-right: 6px;
-    box-shadow: 0 0 12px rgba(168, 224, 99, 0.8);
-  }
-
-  @media (max-width: 600px) {
-    header { padding: 14px 18px; }
-    nav a { margin: 0 6px; font-size: 13px; }
-    .products { padding: 40px 18px; }
-    .logo { font-size: 22px; }
-    .hero { padding: 80px 18px 60px; }
-  }
-</style>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-<div class="bg-image"></div>
-<div class="overlay"></div>
 
 <header>
   <div class="logo">🌿 Vin<span>land</span></div>
   <nav>
-    <a href="#">الرئيسية</a>
+    <a href="#home">الرئيسية</a>
     <a href="#products">المنتجات</a>
-    <a href="#">تواصل</a>
-    <a href="#" id="cartLink">🛒 السلة <span class="cart-badge" id="cartCount">0</span></a>
+    <a href="#reviews">آراء العملاء</a>
+    <a href="#faq">الأسئلة</a>
+    <a href="#track">تتبع الطلب</a>
+    <a href="#" class="cart-link" id="cartToggle">🛒 السلة <span class="cart-badge">0</span></a>
   </nav>
 </header>
 
-<section class="hero">
+<section class="hero" id="home">
   <h1>Vinland</h1>
   <p>متجرك الرقمي الأول — حسابات، اشتراكات، وخدمات بأفضل الأسعار.</p>
   <a href="#products" class="btn">تسوّق الآن</a>
 </section>
 
-<section class="products" id="products">
+<div class="features-bar">
+  <div class="feature"><span class="feature-icon">⚡</span> تسليم فوري</div>
+  <div class="feature"><span class="feature-icon">🛡️</span> ضمان كامل</div>
+  <div class="feature"><span class="feature-icon">💬</span> دعم 24/7</div>
+  <div class="feature"><span class="feature-icon">💳</span> دفع آمن</div>
+</div>
 
-  <div class="card">
-    <span class="badge hot">🔥 حار</span>
-    <div class="img">🎮</div>
-    <h3>حساب Steam مميز</h3>
-    <p>حساب Steam فيه ألعاب AAA + مكتبة ضخمة.</p>
-    <div class="price-row">
-      <span class="price">$25</span>
-      <button class="add-btn" data-name="حساب Steam">أضف للسلة</button>
+<section class="section" id="best">
+  <h2 class="section-title">🔥 <span>الأكثر مبيعاً</span></h2>
+  <p class="section-subtitle">أشهر المنتجات اللي اختارها عملاؤنا</p>
+  <div class="best-sellers" id="bestSellers"></div>
+</section>
+
+<section class="section" id="products">
+  <h2 class="section-title">🛍️ <span>كل المنتجات</span></h2>
+  <p class="section-subtitle">اختر من تشكيلتنا الواسعة</p>
+  <div class="filters" id="filters">
+    <button class="filter-btn active" data-filter="all">الكل</button>
+    <button class="filter-btn" data-filter="accounts">🎮 حسابات</button>
+    <button class="filter-btn" data-filter="subscriptions">🎬 اشتراكات</button>
+    <button class="filter-btn" data-filter="tools">🛠️ أدوات</button>
+  </div>
+  <div class="products-grid" id="productsGrid"></div>
+</section>
+
+<section class="section" id="reviews">
+  <h2 class="section-title">⭐ <span>آراء العملاء</span></h2>
+  <p class="section-subtitle">شنو قالوا عنا؟</p>
+  <div class="reviews" id="reviewsGrid"></div>
+</section>
+
+<section class="section" id="faq">
+  <h2 class="section-title">❓ <span>الأسئلة الشائعة</span></h2>
+  <p class="section-subtitle">كل اللي تحتاج تعرفه</p>
+  <div class="faq-list" id="faqList"></div>
+</section>
+
+<section class="section" id="track">
+  <h2 class="section-title">📦 <span>تتبع طلبك</span></h2>
+  <p class="section-subtitle">أدخل رقم الطلب لمعرفة حالته</p>
+  <div class="track-box">
+    <div class="track-form">
+      <input type="text" id="trackInput" placeholder="مثال: VL-2025-001" />
+      <button onclick="trackOrder()">تتبع</button>
+    </div>
+    <div class="timeline" id="timeline">
+      <div class="timeline-step done">
+        <div class="step-dot">✓</div>
+        <div class="step-info"><h4>تم استلام الطلب</h4><p>2025-01-15 10:30</p></div>
+      </div>
+      <div class="timeline-step done">
+        <div class="step-dot">✓</div>
+        <div class="step-info"><h4>قيد المعالجة</h4><p>2025-01-15 10:35</p></div>
+      </div>
+      <div class="timeline-step">
+        <div class="step-dot">⏳</div>
+        <div class="step-info"><h4>قيد التسليم</h4><p>جاري تجهيز الطلب...</p></div>
+      </div>
+      <div class="timeline-step">
+        <div class="step-dot">○</div>
+        <div class="step-info"><h4>تم التسليم</h4><p>في انتظار الإكمال</p></div>
+      </div>
     </div>
   </div>
-
-  <div class="card">
-    <span class="badge">⭐ مميز</span>
-    <div class="img">🎬</div>
-    <h3>اشتراك Netflix</h3>
-    <p>شهر كامل — باقة Premium 4K بدون إعلانات.</p>
-    <div class="price-row">
-      <span class="price">$8</span>
-      <button class="add-btn" data-name="Netflix">أضف للسلة</button>
-    </div>
-  </div>
-
-  <div class="card">
-    <span class="badge new">✨ جديد</span>
-    <div class="img">🎵</div>
-    <h3>Spotify Premium</h3>
-    <p>3 أشهر — استماع بلا حدود بدون إعلانات.</p>
-    <div class="price-row">
-      <span class="price">$6</span>
-      <button class="add-btn" data-name="Spotify">أضف للسلة</button>
-    </div>
-  </div>
-
-  <div class="card">
-    <span class="badge hot">🔥 حار</span>
-    <div class="img">💬</div>
-    <h3>Discord Nitro</h3>
-    <p>سنة كاملة — ميزات حصرية وإيموجي مخصص.</p>
-    <div class="price-row">
-      <span class="price">$30</span>
-      <button class="add-btn" data-name="Discord Nitro">أضف للسلة</button>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="img">🎨</div>
-    <h3>Canva Pro</h3>
-    <p>سنة كاملة — تصميم احترافي بدون قيود.</p>
-    <div class="price-row">
-      <span class="price">$10</span>
-      <button class="add-btn" data-name="Canva Pro">أضف للسلة</button>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="img">🤖</div>
-    <h3>ChatGPT Plus</h3>
-    <p>شهر — GPT-4 وأدوات الذكاء الاصطناعي.</p>
-    <div class="price-row">
-      <span class="price">$15</span>
-      <button class="add-btn" data-name="ChatGPT Plus">أضف للسلة</button>
-    </div>
-  </div>
-
-  <div class="card">
-    <span class="badge new">✨ جديد</span>
-    <div class="img">📺</div>
-    <h3>YouTube Premium</h3>
-    <p>6 أشهر — بدون إعلانات + YouTube Music.</p>
-    <div class="price-row">
-      <span class="price">$12</span>
-      <button class="add-btn" data-name="YouTube Premium">أضف للسلة</button>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="img">🛡️</div>
-    <h3>VPN سنوي</h3>
-    <p>حماية كاملة + سرعة عالية بدون تسجيل.</p>
-    <div class="price-row">
-      <span class="price">$18</span>
-      <button class="add-btn" data-name="VPN">أضف للسلة</button>
-    </div>
-  </div>
-
 </section>
 
 <footer>
+  <div class="footer-links">
+    <a href="#home">الرئيسية</a>
+    <a href="#products">المنتجات</a>
+    <a href="#faq">الأسئلة</a>
+    <a href="#track">تتبع الطلب</a>
+  </div>
   © 2025 <span>Vinland</span> — كل الحقوق محفوظة 🌿
 </footer>
 
-<div class="toast" id="toast">✓ تمت الإضافة للسلة</div>
+<div class="cart-backdrop" id="cartBackdrop"></div>
+<aside class="cart-drawer" id="cartDrawer">
+  <div class="cart-header">
+    <h2>🛒 سلة التسوق</h2>
+    <button class="close-cart" id="closeCart">✕</button>
+  </div>
+  <div class="cart-items" id="cartItems"></div>
+  <div class="cart-footer" id="cartFooter"></div>
+</aside>
 
-<script>
-  let cart = JSON.parse(localStorage.getItem('vinland_cart') || '[]');
-  const cartCount = document.getElementById('cartCount');
-  const toast = document.getElementById('toast');
+<a href="https://wa.me/0000000000" target="_blank" class="whatsapp-float">💬</a>
 
-  function updateCart() {
-    cartCount.textContent = cart.length;
-    localStorage.setItem('vinland_cart', JSON.stringify(cart));
-  }
+<div class="toast" id="toast"></div>
 
-  function showToast(msg) {
-    toast.textContent = msg;
-    toast.classList.add('show');
-    clearTimeout(toast._t);
-    toast._t = setTimeout(() => toast.classList.remove('show'), 2000);
-  }
-
-  document.querySelectorAll('.add-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      cart.push(btn.dataset.name);
-      updateCart();
-      showToast('✓ تمت إضافة ' + btn.dataset.name);
-    });
-  });
-
-  document.getElementById('cartLink').addEventListener('click', (e) => {
-    e.preventDefault();
-    if (cart.length === 0) {
-      showToast('السلة فارغة');
-    } else {
-      showToast('لديك ' + cart.length + ' منتج في السلة');
-    }
-  });
-
-  updateCart();
-</script>
-
+<script src="products.js"></script>
+<script src="cart.js"></script>
+<script src="main.js"></script>
 </body>
 </html>
