@@ -32,20 +32,26 @@
     color: var(--white);
   }
 
-  /* ===== الخلفية الثابتة ===== */
+  /* ===== الخلفية مع Blur ===== */
   .bg-image {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: url('background.jpg') center center / cover no-repeat;
+    top: -5%;
+    left: -5%;
+    width: 110vw;
+    height: 110vh;
+    background: #0a1f14 url('background.jpg') center center / cover no-repeat;
     z-index: -3;
-    filter: brightness(0.55) saturate(1.2);
+    filter: brightness(0.45) saturate(1.3) blur(6px);
+    animation: blurPulse 15s ease-in-out infinite alternate;
     pointer-events: none;
   }
 
-  /* تعتيم أخضر خفيف فوق الصورة */
+  @keyframes blurPulse {
+    from { filter: brightness(0.45) saturate(1.3) blur(5px); }
+    to   { filter: brightness(0.5)  saturate(1.4) blur(10px); }
+  }
+
+  /* تعتيم أخضر فوق الصورة */
   .overlay {
     position: fixed;
     top: 0;
@@ -323,7 +329,7 @@
 </head>
 <body>
 
-<!-- 🖼️ خلفية ثابتة -->
+<!-- 🖼️ خلفية Wallhaven مع Blur متحرك -->
 <div class="bg-image"></div>
 <div class="overlay"></div>
 
