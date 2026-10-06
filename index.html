@@ -5,538 +5,25 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Vinland — متجر رقمي</title>
 
+<!-- الأيقونة -->
+<link rel="icon" type="image/png" href="logo.png">
+
+<!-- الخطوط -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Tajawal:wght@400;700;900&family=Amiri:wght@700&display=swap" rel="stylesheet">
 
+<!-- Supabase -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-<style>
-/* ============================================
-   Vinland Store — Full Style
-   ============================================ */
-* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Cairo', 'Tajawal', sans-serif; }
-
-:root {
-  --grass: #7cb342;
-  --grass-dark: #558b2f;
-  --grass-light: #a8e063;
-  --grass-pale: #f1f8e9;
-  --gray-100: #f5f5f5;
-  --gray-200: #eeeeee;
-  --gray-400: #bdbdbd;
-  --gray-600: #757575;
-  --gray-900: #212121;
-  --red: #ff5252;
-  --gold: #ffc107;
-  --blue: #2196f3;
-  --border: #e0f0d8;
-  --shadow-sm: 0 2px 8px rgba(124,179,66,0.08);
-  --shadow-md: 0 8px 24px rgba(124,179,66,0.15);
-  --shadow-lg: 0 16px 48px rgba(124,179,66,0.2);
-  --radius: 16px;
-  --radius-lg: 24px;
-}
-
-html, body { min-height: 100%; overflow-x: hidden; color: var(--gray-900); scroll-behavior: smooth; }
-
-body {
-  background-color: #ffffff;
-  background-image:
-    linear-gradient(rgba(124,179,66,0.06) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(124,179,66,0.06) 1px, transparent 1px);
-  background-size: 40px 40px;
-  background-position: -1px -1px;
-  background-attachment: fixed;
-}
-
-a { color: inherit; text-decoration: none; }
-
-/* ===== الهيدر ===== */
-header {
-  position: sticky; top: 0; z-index: 100;
-  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-  background: rgba(255,255,255,0.9);
-  border-bottom: 1px solid var(--border);
-  padding: 16px 40px;
-  display: flex; justify-content: space-between; align-items: center;
-  gap: 20px;
-}
-
-.logo { font-family: 'Amiri', serif; font-size: 30px; font-weight: 700; white-space: nowrap; }
-.logo a { color: var(--gray-900); }
-.logo span { color: var(--grass); }
-
-nav { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
-nav a { font-weight: 600; font-size: 15px; padding: 8px 14px; border-radius: 30px; transition: 0.3s; }
-nav a:hover { color: var(--grass); background: var(--grass-pale); }
-
-.cart-link { background: var(--grass-pale); color: var(--grass-dark) !important; cursor: pointer; }
-
-.cart-badge {
-  display: inline-block; background: var(--grass); color: #fff;
-  border-radius: 50%; min-width: 20px; height: 20px;
-  line-height: 20px; text-align: center;
-  font-size: 11px; font-weight: 900;
-  padding: 0 4px; margin-right: 4px;
-}
-
-/* زر تسجيل الدخول */
-.login-btn {
-  background: linear-gradient(135deg, var(--grass-light), var(--grass));
-  color: #fff;
-  font-weight: 700;
-  font-size: 14px;
-  padding: 9px 18px;
-  border: none;
-  border-radius: 30px;
-  cursor: pointer;
-  font-family: 'Cairo', sans-serif;
-  box-shadow: var(--shadow-sm);
-  transition: 0.3s;
-  white-space: nowrap;
-}
-.login-btn:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
-
-.user-menu {
-  display: flex; align-items: center; gap: 8px;
-  background: var(--grass-pale);
-  padding: 5px 12px 5px 5px;
-  border-radius: 30px;
-  font-weight: 700;
-  font-size: 14px;
-  color: var(--grass-dark);
-  border: 1px solid var(--border);
-}
-.user-avatar { width: 24px; height: 24px; border-radius: 50%; object-fit: cover; }
-.user-menu button {
-  background: var(--grass); color: #fff; border: none;
-  padding: 6px 14px; border-radius: 30px; cursor: pointer;
-  font-family: 'Cairo', sans-serif; font-weight: 700; font-size: 12px;
-  transition: 0.3s;
-}
-.user-menu button:hover { background: var(--grass-dark); }
-
-/* ===== الهيرو ===== */
-.hero { text-align: center; padding: 100px 20px 60px; }
-.hero h1 {
-  font-family: 'Amiri', serif;
-  font-size: clamp(40px, 8vw, 90px);
-  font-weight: 700; margin-bottom: 20px;
-  color: var(--grass);
-  text-shadow: 0 4px 30px rgba(124,179,66,0.2);
-}
-.hero p { font-size: 19px; color: var(--gray-600); max-width: 620px; margin: 0 auto 32px; line-height: 1.8; }
-.hero-buttons { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
-
-.btn {
-  display: inline-block; padding: 15px 42px;
-  background: linear-gradient(135deg, var(--grass-light), var(--grass));
-  color: #fff; font-weight: 800; border: none;
-  border-radius: 50px; cursor: pointer; font-size: 16px;
-  box-shadow: var(--shadow-md); transition: 0.3s;
-}
-.btn:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
-
-.btn-outline {
-  display: inline-block; padding: 15px 42px;
-  background: transparent; color: var(--grass-dark);
-  font-weight: 800; border: 2px solid var(--grass);
-  border-radius: 50px; cursor: pointer; font-size: 16px;
-  transition: 0.3s;
-}
-.btn-outline:hover { background: var(--grass); color: #fff; transform: translateY(-3px); box-shadow: var(--shadow-md); }
-
-/* ===== شريط الميزات ===== */
-.features-bar {
-  display: flex; justify-content: center; flex-wrap: wrap; gap: 30px;
-  padding: 30px 20px; background: var(--grass-pale);
-  border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
-}
-.feature { display: flex; align-items: center; gap: 10px; font-weight: 600; color: var(--grass-dark); font-size: 15px; }
-.feature-icon { font-size: 24px; }
-
-/* ===== الأقسام ===== */
-section.section { padding: 70px 40px; max-width: 1300px; margin: 0 auto; }
-.section-title { text-align: center; font-family: 'Amiri', serif; font-size: clamp(28px, 4vw, 42px); font-weight: 700; margin-bottom: 12px; }
-.section-title span { color: var(--grass); }
-.section-subtitle { text-align: center; color: var(--gray-600); font-size: 16px; margin-bottom: 40px; }
-
-/* ===== الأكثر مبيعاً ===== */
-.best-sellers { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 28px; }
-.best-card {
-  background: linear-gradient(135deg, #fff, var(--grass-pale));
-  border: 2px solid var(--grass-light);
-  border-radius: var(--radius-lg); padding: 26px;
-  position: relative; transition: 0.4s;
-  box-shadow: var(--shadow-md);
-}
-.best-card:hover { transform: translateY(-8px) scale(1.02); box-shadow: var(--shadow-lg); border-color: var(--grass); }
-.best-card .top-badge {
-  position: absolute; top: -12px; left: 20px;
-  background: linear-gradient(135deg, var(--red), #ff8a65);
-  color: #fff; font-size: 12px; font-weight: 900;
-  padding: 6px 14px; border-radius: 20px;
-  box-shadow: 0 6px 15px rgba(255,82,82,0.4);
-}
-.best-card .img {
-  width: 100%; height: 190px; border-radius: var(--radius);
-  background: linear-gradient(135deg, #e8f5e0, #d4edc4);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 72px; margin-bottom: 16px;
-}
-.best-card h3 { font-family: 'Tajawal', sans-serif; font-size: 22px; font-weight: 700; margin-bottom: 8px; }
-.best-card p { color: var(--gray-600); font-size: 14px; line-height: 1.6; margin-bottom: 12px; }
-
-/* ===== الفلترة ===== */
-.filters { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; margin-bottom: 40px; }
-.filter-btn {
-  padding: 10px 24px; background: #fff;
-  border: 1.5px solid var(--border); color: var(--gray-600);
-  border-radius: 30px; cursor: pointer; font-weight: 700; font-size: 14px;
-  font-family: 'Cairo', sans-serif; transition: 0.3s;
-}
-.filter-btn:hover { border-color: var(--grass-light); color: var(--grass-dark); }
-.filter-btn.active { background: var(--grass); border-color: var(--grass); color: #fff; box-shadow: var(--shadow-sm); }
-
-/* ===== المنتجات ===== */
-.products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 24px; }
-.card {
-  background: #fff; border: 1px solid var(--border);
-  border-radius: var(--radius); padding: 20px;
-  transition: 0.3s; position: relative;
-  box-shadow: var(--shadow-sm);
-}
-.card:hover { transform: translateY(-6px); border-color: var(--grass-light); box-shadow: var(--shadow-md); }
-.card .badge {
-  position: absolute; top: 12px; left: 12px;
-  background: var(--grass); color: #fff;
-  font-size: 11px; font-weight: 900;
-  padding: 4px 10px; border-radius: 20px;
-}
-.card .badge.hot { background: var(--red); }
-.card .badge.new { background: var(--blue); }
-.card .img {
-  width: 100%; height: 150px; border-radius: 12px;
-  background: linear-gradient(135deg, var(--grass-pale), #e8f5e0);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 56px; margin-bottom: 14px;
-  border: 1px solid var(--border);
-}
-.card h3 { font-family: 'Tajawal', sans-serif; font-size: 18px; font-weight: 700; margin-bottom: 6px; }
-.card p { font-size: 13px; color: var(--gray-600); margin-bottom: 10px; line-height: 1.6; }
-.card .stars, .best-card .stars { color: var(--gold); font-size: 13px; margin-bottom: 10px; }
-.card .price-row, .best-card .price-row { display: flex; justify-content: space-between; align-items: center; margin-top: 12px; }
-.price { font-family: 'Tajawal', sans-serif; font-size: 22px; font-weight: 900; color: var(--grass); }
-.add-btn {
-  padding: 9px 18px; background: var(--grass-pale);
-  border: 1px solid var(--grass-light); color: var(--grass-dark);
-  border-radius: 30px; cursor: pointer; font-weight: 700; font-size: 13px;
-  font-family: 'Cairo', sans-serif; transition: 0.3s;
-}
-.add-btn:hover { background: var(--grass); color: #fff; border-color: var(--grass); }
-
-/* ===== آراء العملاء ===== */
-.reviews { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
-.review-card {
-  background: #fff; border: 1px solid var(--border);
-  border-radius: var(--radius); padding: 24px;
-  transition: 0.3s; box-shadow: var(--shadow-sm);
-}
-.review-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
-.review-header { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
-.avatar {
-  width: 48px; height: 48px; border-radius: 50%;
-  background: linear-gradient(135deg, var(--grass-light), var(--grass));
-  display: flex; align-items: center; justify-content: center;
-  color: #fff; font-size: 22px; font-weight: 900;
-}
-.review-header h4 { font-size: 16px; font-weight: 700; margin-bottom: 2px; }
-.verified { font-size: 11px; color: var(--grass); font-weight: 700; }
-.review-card .stars { color: var(--gold); margin-bottom: 10px; }
-.review-card p { color: var(--gray-600); font-size: 14px; line-height: 1.7; font-style: italic; }
-
-/* ===== FAQ ===== */
-.faq-list { max-width: 800px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; }
-.faq-item {
-  background: #fff; border: 1px solid var(--border);
-  border-radius: var(--radius); overflow: hidden; transition: 0.3s;
-}
-.faq-item:hover { border-color: var(--grass-light); }
-.faq-question {
-  width: 100%; background: none; border: none;
-  padding: 20px 24px; text-align: right;
-  font-family: 'Cairo', sans-serif; font-size: 16px; font-weight: 700;
-  color: var(--gray-900); cursor: pointer;
-  display: flex; justify-content: space-between; align-items: center;
-  transition: 0.3s;
-}
-.faq-question:hover { background: var(--grass-pale); }
-.faq-question .arrow { font-size: 20px; color: var(--grass); transition: transform 0.3s; }
-.faq-item.open .faq-question .arrow { transform: rotate(180deg); }
-.faq-answer {
-  max-height: 0; overflow: hidden;
-  transition: max-height 0.4s ease, padding 0.3s ease;
-  padding: 0 24px; color: var(--gray-600);
-  font-size: 15px; line-height: 1.8;
-}
-.faq-item.open .faq-answer { max-height: 300px; padding: 0 24px 20px; }
-
-/* ===== تتبع الطلب ===== */
-.track-box {
-  max-width: 700px; margin: 0 auto;
-  background: #fff; border: 1px solid var(--border);
-  border-radius: var(--radius-lg); padding: 40px;
-  box-shadow: var(--shadow-sm);
-}
-.track-form { display: flex; gap: 10px; margin-bottom: 30px; }
-.track-form input {
-  flex: 1; padding: 15px 20px;
-  border: 1.5px solid var(--border); border-radius: 50px;
-  font-family: 'Cairo', sans-serif; font-size: 15px;
-  outline: none; transition: 0.3s;
-}
-.track-form input:focus { border-color: var(--grass); box-shadow: 0 0 0 4px rgba(168,224,99,0.2); }
-.track-form button {
-  padding: 15px 32px; background: var(--grass); color: #fff;
-  border: none; border-radius: 50px;
-  font-family: 'Cairo', sans-serif; font-weight: 800;
-  cursor: pointer; transition: 0.3s;
-}
-.track-form button:hover { background: var(--grass-dark); }
-.timeline { display: none; }
-.timeline.active { display: block; }
-.timeline-step { display: flex; gap: 16px; padding-bottom: 24px; position: relative; }
-.timeline-step:not(:last-child)::before {
-  content: ''; position: absolute;
-  right: 15px; top: 30px; width: 2px;
-  height: calc(100% - 6px); background: var(--border);
-}
-.timeline-step.done::before { background: var(--grass); }
-.step-dot {
-  width: 32px; height: 32px; border-radius: 50%;
-  background: var(--gray-100); border: 3px solid #fff;
-  box-shadow: 0 0 0 2px var(--gray-100);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 14px; flex-shrink: 0; color: var(--gray-600);
-}
-.timeline-step.done .step-dot { background: var(--grass); color: #fff; box-shadow: 0 0 0 2px var(--grass); }
-.step-info h4 { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
-.step-info p { font-size: 13px; color: var(--gray-600); }
-.timeline-step.done .step-info h4 { color: var(--grass-dark); }
-
-/* ===== السلة الجانبية ===== */
-.cart-drawer {
-  position: fixed; top: 0; left: -420px;
-  width: 100%; max-width: 400px; height: 100vh;
-  background: #fff; z-index: 200;
-  box-shadow: 4px 0 30px rgba(0,0,0,0.15);
-  transition: left 0.4s ease;
-  display: flex; flex-direction: column;
-}
-.cart-drawer.open { left: 0; }
-.cart-header { padding: 20px 24px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
-.cart-header h2 { font-family: 'Amiri', serif; font-size: 24px; color: var(--grass); }
-.close-cart {
-  background: var(--grass-pale); border: none;
-  width: 36px; height: 36px; border-radius: 50%;
-  font-size: 18px; cursor: pointer; color: var(--grass-dark);
-  transition: 0.3s;
-}
-.close-cart:hover { background: var(--grass); color: #fff; }
-.cart-items { flex: 1; overflow-y: auto; padding: 20px 24px; }
-.cart-item { display: flex; align-items: center; gap: 14px; padding: 14px 0; border-bottom: 1px solid var(--border); }
-.cart-item .item-img {
-  width: 55px; height: 55px; border-radius: 12px;
-  background: linear-gradient(135deg, var(--grass-pale), #e8f5e0);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 26px; flex-shrink: 0;
-}
-.cart-item .item-info { flex: 1; }
-.cart-item .item-info h4 { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
-.cart-item .item-info .item-price { color: var(--grass); font-weight: 700; font-size: 14px; }
-.cart-item .item-qty { font-size: 12px; color: var(--gray-600); }
-.remove-btn {
-  background: #fff; border: 1px solid #ffcdd2;
-  color: var(--red); width: 32px; height: 32px;
-  border-radius: 50%; cursor: pointer; font-size: 16px;
-  transition: 0.3s; flex-shrink: 0;
-  display: flex; align-items: center; justify-content: center;
-}
-.remove-btn:hover { background: var(--red); color: #fff; border-color: var(--red); }
-.cart-footer { padding: 20px 24px; border-top: 1px solid var(--border); background: var(--grass-pale); }
-.summary-row { display: flex; justify-content: space-between; padding: 8px 0; font-size: 15px; }
-.summary-row.total { border-top: 2px solid var(--border); margin-top: 8px; padding-top: 14px; font-size: 20px; font-weight: 900; color: var(--grass); }
-.checkout-btn {
-  width: 100%; padding: 16px; margin-top: 14px;
-  background: linear-gradient(135deg, var(--grass-light), var(--grass));
-  color: #fff; border: none; border-radius: 50px;
-  font-family: 'Cairo', sans-serif; font-size: 16px; font-weight: 800;
-  cursor: pointer; transition: 0.3s; box-shadow: var(--shadow-md);
-}
-.checkout-btn:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
-.empty-cart { text-align: center; padding: 60px 20px; }
-.empty-cart .icon { font-size: 60px; margin-bottom: 16px; opacity: 0.3; }
-.empty-cart p { color: var(--gray-600); }
-.cart-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 199; opacity: 0; pointer-events: none; transition: opacity 0.4s; }
-.cart-backdrop.show { opacity: 1; pointer-events: all; }
-
-/* ===== الفوتر ===== */
-footer {
-  text-align: center; padding: 40px 20px;
-  color: var(--gray-600); border-top: 1px solid var(--border);
-  margin-top: 60px; background: var(--grass-pale);
-}
-footer span { color: var(--grass); font-weight: 700; }
-footer .footer-links { display: flex; justify-content: center; gap: 20px; margin-bottom: 16px; flex-wrap: wrap; }
-footer .footer-links a { color: var(--gray-600); font-weight: 600; font-size: 14px; transition: 0.3s; }
-footer .footer-links a:hover { color: var(--grass); }
-
-/* ===== إشعار ===== */
-.toast {
-  position: fixed; bottom: 30px; left: 50%;
-  transform: translateX(-50%) translateY(120px);
-  background: var(--grass); color: #fff;
-  padding: 14px 30px; border-radius: 50px;
-  font-weight: 700; box-shadow: var(--shadow-lg);
-  transition: 0.4s; z-index: 999; opacity: 0;
-}
-.toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
-.toast.error { background: var(--red); }
-
-/* ===== واتساب ===== */
-.whatsapp-float {
-  position: fixed; bottom: 30px; left: 30px;
-  width: 60px; height: 60px; background: #25D366;
-  border-radius: 50%; display: flex;
-  align-items: center; justify-content: center;
-  font-size: 30px; color: #fff;
-  box-shadow: 0 8px 24px rgba(37,211,102,0.4);
-  z-index: 90; transition: 0.3s;
-}
-.whatsapp-float:hover { transform: scale(1.1); box-shadow: 0 12px 32px rgba(37,211,102,0.6); }
-
-/* ============================================
-   Modal تسجيل الدخول
-   ============================================ */
-.auth-modal {
-  position: fixed; inset: 0; z-index: 1000;
-  display: flex; align-items: center; justify-content: center;
-  opacity: 0; pointer-events: none;
-  transition: opacity 0.3s;
-  padding: 20px;
-}
-.auth-modal.open { opacity: 1; pointer-events: all; }
-
-.auth-backdrop {
-  position: absolute; inset: 0;
-  background: rgba(0,0,0,0.5);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
-}
-
-.auth-box {
-  position: relative; background: #fff;
-  border-radius: var(--radius-lg);
-  padding: 40px 32px;
-  max-width: 400px; width: 100%;
-  box-shadow: 0 25px 60px rgba(0,0,0,0.2);
-  transform: translateY(20px);
-  transition: transform 0.3s;
-  text-align: center;
-  border: 1px solid var(--border);
-}
-.auth-modal.open .auth-box { transform: translateY(0); }
-
-.auth-close {
-  position: absolute; top: 14px; left: 14px;
-  width: 34px; height: 34px;
-  background: var(--grass-pale); border: none;
-  border-radius: 50%; cursor: pointer;
-  font-size: 16px; color: var(--grass-dark);
-  transition: 0.3s;
-  display: flex; align-items: center; justify-content: center;
-}
-.auth-close:hover { background: var(--grass); color: #fff; }
-
-.auth-logo {
-  font-family: 'Amiri', serif;
-  font-size: 26px; font-weight: 700;
-  color: var(--gray-900);
-  margin-bottom: 20px;
-}
-.auth-logo span { color: var(--grass); }
-
-.auth-box h2 {
-  font-family: 'Amiri', serif;
-  font-size: 26px; color: var(--gray-900);
-  margin-bottom: 8px;
-}
-
-.auth-box > p {
-  color: var(--gray-600);
-  font-size: 14px;
-  margin-bottom: 26px;
-  line-height: 1.6;
-}
-
-.social-btn {
-  display: flex; align-items: center; justify-content: center;
-  gap: 10px; width: 100%;
-  padding: 14px 20px; margin-bottom: 12px;
-  border: 1.5px solid var(--border);
-  background: #fff;
-  border-radius: 50px;
-  font-family: 'Cairo', sans-serif;
-  font-size: 15px; font-weight: 700;
-  color: var(--gray-900);
-  cursor: pointer;
-  transition: 0.3s;
-}
-.social-btn span { font-size: 20px; }
-.social-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: var(--shadow-md); }
-.social-btn.facebook:hover:not(:disabled) { background: #1877f2; color: #fff; border-color: #1877f2; }
-.social-btn.google:hover:not(:disabled) { background: #fff; border-color: #4285f4; color: #4285f4; box-shadow: 0 8px 24px rgba(66,133,244,0.2); }
-.social-btn:disabled { opacity: 0.6; cursor: not-allowed; }
-
-.auth-terms {
-  font-size: 12px !important;
-  color: var(--gray-600) !important;
-  margin-top: 20px !important;
-  margin-bottom: 0 !important;
-  line-height: 1.6 !important;
-}
-.auth-terms a { color: var(--grass); font-weight: 700; text-decoration: underline; }
-
-/* ============================================
-   Responsive
-   ============================================ */
-@media (max-width: 900px) {
-  header { padding: 14px 20px; flex-wrap: wrap; gap: 10px; }
-  .logo { font-size: 22px; }
-  nav { gap: 2px; }
-  nav a { padding: 6px 10px; font-size: 13px; }
-  section.section { padding: 50px 20px; }
-  .products-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 14px; }
-  .card { padding: 14px; }
-  .card .img { height: 120px; font-size: 44px; }
-  .cart-drawer { max-width: 100%; }
-  .track-box { padding: 24px; }
-  .track-form { flex-direction: column; }
-  .hero { padding: 70px 20px 40px; }
-  .hero-buttons { flex-direction: column; align-items: center; }
-  .btn, .btn-outline { width: 100%; max-width: 280px; text-align: center; }
-  .login-btn { padding: 7px 14px; font-size: 13px; }
-  .user-menu { padding: 4px 10px 4px 4px; font-size: 13px; }
-  .user-menu button { padding: 5px 10px; font-size: 11px; }
-  .whatsapp-float { bottom: 20px; left: 20px; width: 54px; height: 54px; font-size: 26px; }
-  .auth-box { padding: 32px 22px; }
-}
-</style>
+<!-- الستايل -->
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<!-- ===== الهيدر ===== -->
+<!-- ============================================
+     الهيدر
+     ============================================ -->
 <header>
   <div class="logo"><a href="index.html">🌿 Vin<span>land</span></a></div>
   <nav>
@@ -547,13 +34,17 @@ footer .footer-links a:hover { color: var(--grass); }
     <a href="cart.html" class="cart-link">🛒 السلة <span class="cart-badge">0</span></a>
     <button class="login-btn" id="loginBtn">👤 تسجيل الدخول</button>
     <div class="user-menu" id="userMenu" style="display:none;">
-      <span id="userName">👤 مستخدم</span>
+      <a href="account.html" id="userNameLink" style="display:flex;align-items:center;gap:6px;">
+        <span id="userName">👤 مستخدم</span>
+      </a>
       <button id="logoutBtn">خروج</button>
     </div>
   </nav>
 </header>
 
-<!-- ===== الهيرو ===== -->
+<!-- ============================================
+     الهيرو
+     ============================================ -->
 <section class="hero" id="home">
   <h1>Vinland</h1>
   <p>متجرك الرقمي الأول — حسابات، اشتراكات، وخدمات بأفضل الأسعار.</p>
@@ -563,7 +54,9 @@ footer .footer-links a:hover { color: var(--grass); }
   </div>
 </section>
 
-<!-- ===== شريط الميزات ===== -->
+<!-- ============================================
+     شريط الميزات
+     ============================================ -->
 <div class="features-bar">
   <div class="feature"><span class="feature-icon">⚡</span> تسليم فوري</div>
   <div class="feature"><span class="feature-icon">🛡️</span> ضمان كامل</div>
@@ -571,83 +64,114 @@ footer .footer-links a:hover { color: var(--grass); }
   <div class="feature"><span class="feature-icon">💳</span> دفع آمن</div>
 </div>
 
-<!-- ===== الأكثر مبيعاً ===== -->
+<!-- ============================================
+     الأكثر مبيعاً
+     ============================================ -->
 <section class="section" id="best">
   <h2 class="section-title">🔥 <span>الأكثر مبيعاً</span></h2>
   <p class="section-subtitle">أشهر المنتجات اللي اختارها عملاؤنا</p>
   <div class="best-sellers" id="bestSellers"></div>
 </section>
 
-<!-- ===== المنتجات ===== -->
+<!-- ============================================
+     المنتجات
+     ============================================ -->
 <section class="section" id="products">
   <h2 class="section-title">🛍️ <span>كل المنتجات</span></h2>
   <p class="section-subtitle">اختر من تشكيلتنا الواسعة</p>
+
   <div class="filters" id="filters">
     <button class="filter-btn active" data-filter="all">الكل</button>
     <button class="filter-btn" data-filter="accounts">🎮 حسابات</button>
     <button class="filter-btn" data-filter="subscriptions">🎬 اشتراكات</button>
     <button class="filter-btn" data-filter="tools">🛠️ أدوات</button>
   </div>
+
   <div class="products-grid" id="productsGrid"></div>
 </section>
 
-<!-- ===== آراء العملاء ===== -->
+<!-- ============================================
+     آراء العملاء
+     ============================================ -->
 <section class="section" id="reviews">
   <h2 class="section-title">⭐ <span>آراء العملاء</span></h2>
   <p class="section-subtitle">شنو قالوا عنا؟</p>
   <div class="reviews" id="reviewsGrid"></div>
 </section>
 
-<!-- ===== FAQ ===== -->
+<!-- ============================================
+     الأسئلة الشائعة
+     ============================================ -->
 <section class="section" id="faq">
   <h2 class="section-title">❓ <span>الأسئلة الشائعة</span></h2>
   <p class="section-subtitle">كل اللي تحتاج تعرفه</p>
   <div class="faq-list" id="faqList"></div>
 </section>
 
-<!-- ===== تتبع الطلب ===== -->
+<!-- ============================================
+     تتبع الطلب (سريع)
+     ============================================ -->
 <section class="section" id="track">
   <h2 class="section-title">📦 <span>تتبع طلبك</span></h2>
   <p class="section-subtitle">أدخل رقم الطلب لمعرفة حالته</p>
+
   <div class="track-box">
     <div class="track-form">
       <input type="text" id="trackInput" placeholder="مثال: VL-2025-001" />
       <button onclick="trackOrder()">تتبع</button>
     </div>
+
     <div class="timeline" id="timeline">
       <div class="timeline-step done">
         <div class="step-dot">✓</div>
-        <div class="step-info"><h4>تم استلام الطلب</h4><p>2025-01-15 10:30</p></div>
+        <div class="step-info">
+          <h4>تم استلام الطلب</h4>
+          <p>2025-01-15 10:30</p>
+        </div>
       </div>
       <div class="timeline-step done">
         <div class="step-dot">✓</div>
-        <div class="step-info"><h4>قيد المعالجة</h4><p>2025-01-15 10:35</p></div>
+        <div class="step-info">
+          <h4>قيد المعالجة</h4>
+          <p>2025-01-15 10:35</p>
+        </div>
       </div>
       <div class="timeline-step">
         <div class="step-dot">⏳</div>
-        <div class="step-info"><h4>قيد التسليم</h4><p>جاري تجهيز الطلب...</p></div>
+        <div class="step-info">
+          <h4>قيد التسليم</h4>
+          <p>جاري تجهيز الطلب...</p>
+        </div>
       </div>
       <div class="timeline-step">
         <div class="step-dot">○</div>
-        <div class="step-info"><h4>تم التسليم</h4><p>في انتظار الإكمال</p></div>
+        <div class="step-info">
+          <h4>تم التسليم</h4>
+          <p>في انتظار الإكمال</p>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ===== الفوتر ===== -->
+<!-- ============================================
+     الفوتر
+     ============================================ -->
 <footer>
   <div class="footer-links">
     <a href="index.html">الرئيسية</a>
     <a href="#products">المنتجات</a>
     <a href="cart.html">السلة</a>
     <a href="track.html">تتبع الطلب</a>
-    <a href="#faq">الأسئلة</a>
+    <a href="terms.html">الشروط</a>
+    <a href="privacy.html">الخصوصية</a>
   </div>
   © 2025 <span>Vinland</span> — كل الحقوق محفوظة 🌿
 </footer>
 
-<!-- ===== السلة الجانبية ===== -->
+<!-- ============================================
+     السلة الجانبية
+     ============================================ -->
 <div class="cart-backdrop" id="cartBackdrop"></div>
 <aside class="cart-drawer" id="cartDrawer">
   <div class="cart-header">
@@ -658,10 +182,14 @@ footer .footer-links a:hover { color: var(--grass); }
   <div class="cart-footer" id="cartFooter"></div>
 </aside>
 
-<!-- ===== زر واتساب ===== -->
+<!-- ============================================
+     زر واتساب
+     ============================================ -->
 <a href="https://wa.me/0000000000" target="_blank" class="whatsapp-float">💬</a>
 
-<!-- ===== Modal تسجيل الدخول ===== -->
+<!-- ============================================
+     Modal تسجيل الدخول
+     ============================================ -->
 <div class="auth-modal" id="authModal">
   <div class="auth-backdrop" id="authBackdrop"></div>
   <div class="auth-box">
@@ -680,419 +208,24 @@ footer .footer-links a:hover { color: var(--grass); }
 
     <p class="auth-terms">
       بمتابعتك، أنت توافق على
-      <a href="#">الشروط</a> و
-      <a href="#">سياسة الخصوصية</a>
+      <a href="terms.html">الشروط</a> و
+      <a href="privacy.html">سياسة الخصوصية</a>
     </p>
   </div>
 </div>
 
-<!-- ===== إشعار ===== -->
+<!-- ============================================
+     إشعار
+     ============================================ -->
 <div class="toast" id="toast"></div>
 
-<!-- ===== السكربتات ===== -->
+<!-- ============================================
+     السكربتات
+     ============================================ -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-/* ============================================
-   Supabase Auth
-   ============================================ */
-const SUPABASE_URL = 'https://ncrycgbrstafdouvipzc.supabase.co';
-const SUPABASE_ANON_KEY = 'sb_publishable_6t2dkU27Rkinsoo8MhYAEQ_FSgj4G73';
-
-const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-/* ===== تسجيل الدخول بفيسبوك ===== */
-async function signInWithFacebook() {
-  try {
-    const { data, error } = await sb.auth.signInWithOAuth({
-      provider: 'facebook',
-      options: {
-        redirectTo: window.location.origin + window.location.pathname
-      }
-    });
-    if (error) throw error;
-    return { data };
-  } catch (err) {
-    console.error('Facebook login error:', err);
-    return { error: err };
-  }
-}
-
-/* ===== تسجيل الدخول بجوجل ===== */
-async function signInWithGoogle() {
-  try {
-    const { data, error } = await sb.auth.signInWithOAuth({
-      provider: 'google',
-      options: {
-        redirectTo: window.location.origin + window.location.pathname
-      }
-    });
-    if (error) throw error;
-    return { data };
-  } catch (err) {
-    console.error('Google login error:', err);
-    return { error: err };
-  }
-}
-
-/* ===== تسجيل الخروج ===== */
-async function signOut() {
-  try {
-    const { error } = await sb.auth.signOut();
-    if (error) throw error;
-    return { success: true };
-  } catch (err) {
-    console.error('Sign out error:', err);
-    return { error: err };
-  }
-}
-
-/* ===== مراقبة حالة الدخول ===== */
-function onAuthChange(callback) {
-  sb.auth.onAuthStateChange((event, session) => {
-    callback(session?.user || null);
-  });
-}
-
-/* ============================================
-   بيانات المنتجات
-   ============================================ */
-const PRODUCTS = [
-  { id: 1, name: "حساب Steam مميز", desc: "حساب Steam فيه ألعاب AAA + مكتبة ضخمة.", price: 25, category: "accounts", icon: "🎮", badge: "hot", rating: 5, bestSeller: true },
-  { id: 2, name: "حساب Epic Games", desc: "ألعاب مجانية أسبوعياً + مكتبة متنوعة.", price: 15, category: "accounts", icon: "🎯", rating: 4, badge: "new" },
-  { id: 3, name: "حساب Valorant", desc: "سكنات نادرة + رانك عالي.", price: 40, category: "accounts", icon: "🔫", rating: 5, bestSeller: true },
-  { id: 4, name: "حساب PUBG Mobile", desc: "مستوى عالي + سكنات نادرة.", price: 20, category: "accounts", icon: "🎯", rating: 4 },
-  { id: 5, name: "اشتراك Netflix", desc: "شهر كامل — باقة Premium 4K بدون إعلانات.", price: 8, category: "subscriptions", icon: "🎬", badge: "hot", rating: 5, bestSeller: true },
-  { id: 6, name: "Spotify Premium", desc: "3 أشهر — استماع بلا حدود بدون إعلانات.", price: 6, category: "subscriptions", icon: "🎵", badge: "new", rating: 5 },
-  { id: 7, name: "Discord Nitro", desc: "سنة كاملة — ميزات حصرية وإيموجي مخصص.", price: 30, category: "subscriptions", icon: "💬", rating: 5 },
-  { id: 8, name: "YouTube Premium", desc: "6 أشهر — بدون إعلانات + YouTube Music.", price: 12, category: "subscriptions", icon: "📺", badge: "new", rating: 4 },
-  { id: 9, name: "ChatGPT Plus", desc: "شهر — GPT-4 وأدوات الذكاء الاصطناعي.", price: 15, category: "subscriptions", icon: "🤖", rating: 5 },
-  { id: 10, name: "Canva Pro", desc: "سنة كاملة — تصميم احترافي بدون قيود.", price: 10, category: "tools", icon: "🎨", rating: 5 },
-  { id: 11, name: "VPN سنوي", desc: "حماية كاملة + سرعة عالية بدون تسجيل.", price: 18, category: "tools", icon: "🛡️", rating: 4 },
-  { id: 12, name: "Adobe Creative Cloud", desc: "شهر — كل برامج Adobe.", price: 22, category: "tools", icon: "🖌️", rating: 5 },
-];
-
-const REVIEWS = [
-  { name: "أحمد", initial: "أ", rating: 5, text: "خدمة ممتازة وسريعة! استلمت الحساب فوراً بعد الدفع. أنصح الجميع." },
-  { name: "سارة", initial: "س", rating: 5, text: "أسعار ممتازة ودعم فني رائع. تعاملت معهم أكثر من مرة." },
-  { name: "محمد", initial: "م", rating: 5, text: "أفضل متجر رقمي تعاملت معه. مصداقية وأمان 100%." },
-  { name: "نور", initial: "ن", rating: 4, text: "منتجات أصلية وأسعار منافسة. التسليم كان أسرع من المتوقع." },
-];
-
-const FAQS = [
-  { q: "كيف أستلم المنتج بعد الدفع؟", a: "يتم التسليم فوراً عبر الإيميل أو واتساب خلال دقائق من تأكيد الدفع." },
-  { q: "هل يوجد ضمان؟", a: "نعم، جميع المنتجات مضمونة. في حال وجود أي مشكلة، نستبدلها مجاناً خلال 7 أيام." },
-  { q: "ما هي طرق الدفع المتاحة؟", a: "نقبل PayPal، التحويل البنكي، USDT، وطرق دفع محلية أخرى." },
-  { q: "هل يمكن الاسترجاع؟", a: "نعم، يمكنك طلب استرجاع خلال 24 ساعة من الشراء إذا لم يكن المنتج يعمل." },
-  { q: "كم يستغرق التسليم؟", a: "التسليم فوري خلال دقائق. في أوقات الذروة قد يستغرق حتى 30 دقيقة." },
-  { q: "هل الحسابات آمنة؟", a: "جميع الحسابات أصلية ومضمونة. ننصح بتغيير كلمة المرور بعد الاستلام." },
-];
-
-/* ============================================
-   إشعار
-   ============================================ */
-function showToast(msg, type = 'success') {
-  const toast = document.getElementById('toast');
-  if (!toast) return;
-  toast.textContent = msg;
-  toast.className = 'toast show' + (type === 'error' ? ' error' : '');
-  clearTimeout(toast._t);
-  toast._t = setTimeout(() => toast.classList.remove('show'), 2500);
-}
-
-/* ============================================
-   نجوم
-   ============================================ */
-function renderStars(rating) {
-  return '★'.repeat(rating) + '☆'.repeat(5 - rating);
-}
-
-/* ============================================
-   عرض المنتجات
-   ============================================ */
-function renderProducts(filter = 'all') {
-  const grid = document.getElementById('productsGrid');
-  if (!grid) return;
-  const list = filter === 'all' ? PRODUCTS : PRODUCTS.filter(p => p.category === filter);
-  grid.innerHTML = list.map(p => `
-    <div class="card">
-      ${p.badge ? `<span class="badge ${p.badge}">${p.badge === 'hot' ? '🔥 حار' : p.badge === 'new' ? '✨ جديد' : '⭐ مميز'}</span>` : ''}
-      <div class="img">${p.icon}</div>
-      <h3>${p.name}</h3>
-      <p>${p.desc}</p>
-      <div class="stars">${renderStars(p.rating)}</div>
-      <div class="price-row">
-        <span class="price">$${p.price}</span>
-        <button class="add-btn" onclick="addToCart(${p.id})">أضف للسلة</button>
-      </div>
-    </div>
-  `).join('');
-}
-
-/* ===== الأكثر مبيعاً ===== */
-function renderBestSellers() {
-  const el = document.getElementById('bestSellers');
-  if (!el) return;
-  const best = PRODUCTS.filter(p => p.bestSeller);
-  el.innerHTML = best.map(p => `
-    <div class="best-card">
-      <span class="top-badge">🔥 الأكثر مبيعاً</span>
-      <div class="img">${p.icon}</div>
-      <h3>${p.name}</h3>
-      <div class="stars">${renderStars(p.rating)}</div>
-      <p>${p.desc}</p>
-      <div class="price-row">
-        <span class="price">$${p.price}</span>
-        <button class="add-btn" onclick="addToCart(${p.id})">أضف للسلة</button>
-      </div>
-    </div>
-  `).join('');
-}
-
-/* ===== آراء العملاء ===== */
-function renderReviews() {
-  const el = document.getElementById('reviewsGrid');
-  if (!el) return;
-  el.innerHTML = REVIEWS.map(r => `
-    <div class="review-card">
-      <div class="review-header">
-        <div class="avatar">${r.initial}</div>
-        <div>
-          <h4>${r.name}</h4>
-          <span class="verified">✓ مشتري موثّق</span>
-        </div>
-      </div>
-      <div class="stars">${renderStars(r.rating)}</div>
-      <p>"${r.text}"</p>
-    </div>
-  `).join('');
-}
-
-/* ===== FAQ ===== */
-function renderFAQs() {
-  const el = document.getElementById('faqList');
-  if (!el) return;
-  el.innerHTML = FAQS.map((f, i) => `
-    <div class="faq-item" data-index="${i}">
-      <button class="faq-question">
-        <span>${f.q}</span>
-        <span class="arrow">▼</span>
-      </button>
-      <div class="faq-answer">${f.a}</div>
-    </div>
-  `).join('');
-  el.querySelectorAll('.faq-item').forEach(item => {
-    item.querySelector('.faq-question').addEventListener('click', () => {
-      item.classList.toggle('open');
-    });
-  });
-}
-
-/* ============================================
-   السلة
-   ============================================ */
-const CART_KEY = 'vinland_cart';
-
-function getCart() { return JSON.parse(localStorage.getItem(CART_KEY) || '[]'); }
-function saveCart(cart) { localStorage.setItem(CART_KEY, JSON.stringify(cart)); updateCartBadge(); renderCart(); }
-
-function addToCart(productId) {
-  const cart = getCart();
-  const product = PRODUCTS.find(p => p.id === productId);
-  if (!product) return;
-  const existing = cart.find(item => item.id === productId);
-  if (existing) {
-    existing.qty += 1;
-  } else {
-    cart.push({ id: product.id, name: product.name, price: product.price, icon: product.icon, qty: 1 });
-  }
-  saveCart(cart);
-  showToast('✓ تمت إضافة ' + product.name);
-}
-
-function removeFromCart(productId) {
-  let cart = getCart();
-  cart = cart.filter(item => item.id !== productId);
-  saveCart(cart);
-}
-
-function getCartTotal() { return getCart().reduce((sum, item) => sum + item.price * item.qty, 0); }
-function getCartCount() { return getCart().reduce((sum, item) => sum + item.qty, 0); }
-
-function updateCartBadge() {
-  document.querySelectorAll('.cart-badge').forEach(b => b.textContent = getCartCount());
-}
-
-function renderCart() {
-  const itemsEl = document.getElementById('cartItems');
-  const footerEl = document.getElementById('cartFooter');
-  if (!itemsEl) return;
-  const cart = getCart();
-
-  if (cart.length === 0) {
-    itemsEl.innerHTML = `<div class="empty-cart"><div class="icon">🛒</div><p>سلتك فارغة</p></div>`;
-    if (footerEl) footerEl.innerHTML = '';
-    return;
-  }
-
-  itemsEl.innerHTML = cart.map(item => `
-    <div class="cart-item">
-      <div class="item-img">${item.icon}</div>
-      <div class="item-info">
-        <h4>${item.name}</h4>
-        <span class="item-price">$${item.price}</span>
-        <span class="item-qty"> × ${item.qty}</span>
-      </div>
-      <button class="remove-btn" onclick="removeFromCart(${item.id})">✕</button>
-    </div>
-  `).join('');
-
-  const total = getCartTotal();
-  if (footerEl) footerEl.innerHTML = `
-    <div class="summary-row"><span>المجموع الفرعي</span><span>$${total}</span></div>
-    <div class="summary-row total"><span>الإجمالي</span><span>$${total}</span></div>
-    <button class="checkout-btn" onclick="checkout()">إتمام الشراء ←</button>
-  `;
-}
-
-function checkout() {
-  const cart = getCart();
-  if (cart.length === 0) { showToast('السلة فارغة', 'error'); return; }
-  const total = getCartTotal();
-  let msg = '🛒 طلب جديد من Vinland:\n\n';
-  cart.forEach(item => { msg += `• ${item.name} × ${item.qty} = $${item.price * item.qty}\n`; });
-  msg += `\n💰 الإجمالي: $${total}`;
-  const url = `https://wa.me/0000000000?text=${encodeURIComponent(msg)}`;
-  window.open(url, '_blank');
-}
-
-/* ===== تتبع الطلب ===== */
-function trackOrder() {
-  const input = document.getElementById('trackInput');
-  const timeline = document.getElementById('timeline');
-  if (!input || !timeline) return;
-  if (input.value.trim().length < 3) { showToast('أدخل رقم طلب صحيح', 'error'); return; }
-  timeline.classList.add('active');
-  showToast('✓ جاري عرض حالة الطلب');
-}
-
-/* ===== السلة الجانبية ===== */
-function initCartDrawer() {
-  const toggle = document.getElementById('cartToggle');
-  const drawer = document.getElementById('cartDrawer');
-  const closeBtn = document.getElementById('closeCart');
-  const backdrop = document.getElementById('cartBackdrop');
-  if (!drawer) return;
-
-  function open() { drawer.classList.add('open'); backdrop.classList.add('show'); }
-  function close() { drawer.classList.remove('open'); backdrop.classList.remove('show'); }
-
-  toggle?.addEventListener('click', e => { e.preventDefault(); open(); });
-  closeBtn?.addEventListener('click', close);
-  backdrop?.addEventListener('click', close);
-}
-
-/* ===== فلترة ===== */
-function initFilters() {
-  const buttons = document.querySelectorAll('.filter-btn');
-  buttons.forEach(btn => {
-    btn.addEventListener('click', () => {
-      buttons.forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      renderProducts(btn.dataset.filter);
-    });
-  });
-}
-
-/* ============================================
-   تسجيل الدخول
-   ============================================ */
-document.addEventListener('DOMContentLoaded', () => {
-  const loginBtn = document.getElementById('loginBtn');
-  const userMenu = document.getElementById('userMenu');
-  const userName = document.getElementById('userName');
-  const logoutBtn = document.getElementById('logoutBtn');
-  const authModal = document.getElementById('authModal');
-  const authBackdrop = document.getElementById('authBackdrop');
-  const authClose = document.getElementById('authClose');
-  const fbLoginBtn = document.getElementById('fbLoginBtn');
-  const ggLoginBtn = document.getElementById('ggLoginBtn');
-
-  function openModal() {
-    authModal?.classList.add('open');
-    document.body.style.overflow = 'hidden';
-  }
-
-  function closeModal() {
-    authModal?.classList.remove('open');
-    document.body.style.overflow = '';
-  }
-
-  loginBtn?.addEventListener('click', openModal);
-  authClose?.addEventListener('click', closeModal);
-  authBackdrop?.addEventListener('click', closeModal);
-
-  fbLoginBtn?.addEventListener('click', async () => {
-    fbLoginBtn.disabled = true;
-    fbLoginBtn.innerHTML = '<span>⏳</span> جاري...';
-    const { error } = await signInWithFacebook();
-    if (error) {
-      showToast('فشل تسجيل الدخول بفيسبوك', 'error');
-      fbLoginBtn.disabled = false;
-      fbLoginBtn.innerHTML = '<span>📘</span> تسجيل الدخول بفيسبوك';
-    }
-  });
-
-  ggLoginBtn?.addEventListener('click', async () => {
-    ggLoginBtn.disabled = true;
-    ggLoginBtn.innerHTML = '<span>⏳</span> جاري...';
-    const { error } = await signInWithGoogle();
-    if (error) {
-      showToast('فشل تسجيل الدخول بجوجل', 'error');
-      ggLoginBtn.disabled = false;
-      ggLoginBtn.innerHTML = '<span>🔍</span> تسجيل الدخول بجوجل';
-    }
-  });
-
-  logoutBtn?.addEventListener('click', async () => {
-    await signOut();
-    showToast('✓ تم تسجيل الخروج');
-  });
-
-  onAuthChange((user) => {
-    if (user) {
-      loginBtn.style.display = 'none';
-      userMenu.style.display = 'flex';
-      const name = user.user_metadata?.full_name
-                || user.user_metadata?.name
-                || user.email?.split('@')[0]
-                || 'مستخدم';
-      const avatar = user.user_metadata?.avatar_url;
-      userName.innerHTML = avatar
-        ? `<img src="${avatar}" alt="" class="user-avatar"> ${name}`
-        : `👤 ${name}`;
-      closeModal();
-      showToast('✓ مرحباً ' + name);
-    } else {
-      loginBtn.style.display = 'inline-block';
-      userMenu.style.display = 'none';
-    }
-  });
-
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') closeModal();
-  });
-
-  /* تشغيل كل شي */
-  renderProducts('all');
-  renderBestSellers();
-  renderReviews();
-  renderFAQs();
-  initFilters();
-  initCartDrawer();
-  updateCartBadge();
-  renderCart();
-});
-</script>
+<script src="products.js"></script>
+<script src="cart.js"></script>
+<script src="main.js"></script>
 
 </body>
 </html>
