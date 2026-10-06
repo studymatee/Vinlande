@@ -1,12 +1,14 @@
 /* ============================================
-   Vinland Store — script.js
-   كل الوظائف في ملف واحد
+   Vinland Store — script.js (النسخة الكاملة)
    ============================================ */
+
 /* ============================================
-   Supabase Config
+   إعدادات Supabase
    ============================================ */
 const SUPABASE_URL = 'https://ncrycgbrstafdouvipzc.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_6t2dkU27Rkinsoo8MhYAEQ_FSgj4G73';
+const CART_KEY = 'vinland_cart';
+const WHATSAPP_NUMBER = '0000000000'; // ← بدّل رقمك هنا
 
 let sb = null;
 if (window.supabase) {
@@ -14,230 +16,25 @@ if (window.supabase) {
 }
 
 /* ============================================
-   جلب المنتجات من Supabase
-   ============================================ */
-let PRODUCTS = []; // ← يتغير ليصير let بدل const
-
-const FALLBACK_PRODUCTS = [
-  // كل المنتجات القديمة هنا (كاحتياطي)
-];
-
-async function fetchProducts() {
-  if (!sb) {
-    console.warn('Supabase not loaded, using fallback products');
-    PRODUCTS = FALLBACK_PRODUCTS;
-    return;
-  }
-
-  try {
-    const { data, error } = await sb
-      .from('products')
-      .select('*')
-      .eq('active', true)
-      .order('id', { ascending: true });
-
-    if (error) throw error;
-
-    if (data && data.length > 0) {
-      // تحويل من صيغة Supabase لصيغة موقعنا
-      PRODUCTS = data.map(p => ({
-        id: p.id,
-        name: p.name,
-        desc: p.description,
-        longDesc: p.long_description,
-        price: parseFloat(p.price),
-        category: p.category,
-        img: p.image_url,
-        badge: p.badge,
-        rating: p.rating,
-        reviews: p.reviews_count,
-        stock: p.stock,
-        bestSeller: p.best_seller,
-        features: p.features || []
-      }));
-      console.log('✅ Loaded', PRODUCTS.length, 'products from Supabase');
-    } else {
-      console.warn('No products in Supabase, using fallback');
-      PRODUCTS = FALLBACK_PRODUCTS;
-    }
-  } catch (err) {
-    console.error('Error fetching products:', err);
-    PRODUCTS = FALLBACK_PRODUCTS;
-  }
-}
-
-/* ============================================
-   Fallback Products (احتياطي)
+   المنتجات الاحتياطية (لو Supabase فشل)
    ============================================ */
 const FALLBACK_PRODUCTS = [
-  { 
-    id: 1, 
-    name: "حساب Steam مميز", 
-    desc: "حساب Steam فيه ألعاب AAA + مكتبة ضخمة.", 
-    longDesc: "حساب Steam مميز يحتوي على أكثر من 50 لعبة AAA.",
-    price: 25, 
-    category: "accounts", 
-    img: "https://api.iconify.design/mdi:steam.svg?color=%237cb342",
-    badge: "hot", 
-    rating: 5, 
-    reviews: 47,
-    stock: 5,
-    bestSeller: true,
-    features: ["أكثر من 50 لعبة", "ضمان 30 يوم", "تسليم فوري"]
-  },
-  { 
-    id: 2, 
-    name: "حساب Epic Games", 
-    desc: "ألعاب مجانية أسبوعياً + مكتبة متنوعة.", 
-    longDesc: "حساب Epic Games مع مكتبة متنوعة من الألعاب المجانية.",
-    price: 15, 
-    category: "accounts", 
-    img: "https://api.iconify.design/simple-icons:epicgames.svg?color=%237cb342",
-    rating: 4, 
-    reviews: 23,
-    stock: 8,
-    badge: "new",
-    features: ["ألعاب مجانية", "عروض حصرية", "ضمان 30 يوم"]
-  },
-  { 
-    id: 3, 
-    name: "حساب Valorant", 
-    desc: "سكنات نادرة + رانك عالي.", 
-    longDesc: "حساب Valorant برانك Immortal، مع سكنات نادرة.",
-    price: 40, 
-    category: "accounts", 
-    img: "https://api.iconify.design/simple-icons:valorant.svg?color=%23ff5252",
-    rating: 5, 
-    reviews: 62,
-    stock: 3,
-    bestSeller: true,
-    features: ["رانك Immortal", "سكنات نادرة", "ضمان كامل"]
-  },
-  { 
-    id: 4, 
-    name: "حساب PUBG Mobile", 
-    desc: "مستوى عالي + سكنات نادرة.", 
-    longDesc: "حساب PUBG Mobile بمستوى عالي، مع سكنات نادرة.",
-    price: 20, 
-    category: "accounts", 
-    img: "https://api.iconify.design/mdi:target.svg?color=%23ffc107",
-    rating: 4, 
-    reviews: 31,
-    stock: 6,
-    features: ["مستوى عالي", "سكنات نادرة", "تسليم فوري"]
-  },
-  { 
-    id: 5, 
-    name: "اشتراك Netflix", 
-    desc: "شهر كامل — باقة Premium 4K بدون إعلانات.", 
-    longDesc: "اشتراك Netflix Premium لمدة شهر كامل، جودة 4K.",
-    price: 8, 
-    category: "subscriptions", 
-    img: "https://api.iconify.design/simple-icons:netflix.svg?color=%23e50914",
-    badge: "hot", 
-    rating: 5, 
-    reviews: 156,
-    stock: 20,
-    bestSeller: true,
-    features: ["جودة 4K", "4 أجهزة", "بدون إعلانات"]
-  },
-  { 
-    id: 6, 
-    name: "Spotify Premium", 
-    desc: "3 أشهر — استماع بلا حدود بدون إعلانات.", 
-    longDesc: "اشتراك Spotify Premium لمدة 3 أشهر.",
-    price: 6, 
-    category: "subscriptions", 
-    img: "https://api.iconify.design/simple-icons:spotify.svg?color=%231db954",
-    badge: "new", 
-    rating: 5, 
-    reviews: 89,
-    stock: 15,
-    features: ["3 أشهر", "بدون إعلانات", "تحميل بدون إنترنت"]
-  },
-  { 
-    id: 7, 
-    name: "Discord Nitro", 
-    desc: "سنة كاملة — ميزات حصرية وإيموجي مخصص.", 
-    longDesc: "اشتراك Discord Nitro لمدة سنة كاملة.",
-    price: 30, 
-    category: "subscriptions", 
-    img: "https://api.iconify.design/simple-icons:discord.svg?color=%235865f2",
-    rating: 5, 
-    reviews: 78,
-    stock: 10,
-    features: ["سنة كاملة", "إيموجي مخصص", "بث HD"]
-  },
-  { 
-    id: 8, 
-    name: "YouTube Premium", 
-    desc: "6 أشهر — بدون إعلانات + YouTube Music.", 
-    longDesc: "اشتراك YouTube Premium لمدة 6 أشهر.",
-    price: 12, 
-    category: "subscriptions", 
-    img: "https://api.iconify.design/simple-icons:youtube.svg?color=%23ff0000",
-    badge: "new", 
-    rating: 4, 
-    reviews: 45,
-    stock: 12,
-    features: ["6 أشهر", "YouTube Music", "تحميل الفيديوهات"]
-  },
-  { 
-    id: 9, 
-    name: "ChatGPT Plus", 
-    desc: "شهر — GPT-4 وأدوات الذكاء الاصطناعي.", 
-    longDesc: "اشتراك ChatGPT Plus لمدة شهر، وصول لـ GPT-4.",
-    price: 15, 
-    category: "subscriptions", 
-    img: "https://api.iconify.design/simple-icons:openai.svg?color=%2310a37f",
-    rating: 5, 
-    reviews: 112,
-    stock: 25,
-    features: ["GPT-4", "سرعة عالية", "أدوات متقدمة"]
-  },
-  { 
-    id: 10, 
-    name: "Canva Pro", 
-    desc: "سنة كاملة — تصميم احترافي بدون قيود.", 
-    longDesc: "اشتراك Canva Pro لمدة سنة.",
-    price: 10, 
-    category: "tools", 
-    img: "https://api.iconify.design/simple-icons:canva.svg?color=%2300c4cc",
-    rating: 5, 
-    reviews: 67,
-    stock: 8,
-    features: ["سنة كاملة", "100M+ عنصر", "إزالة الخلفية"]
-  },
-  { 
-    id: 11, 
-    name: "VPN سنوي", 
-    desc: "حماية كاملة + سرعة عالية بدون تسجيل.", 
-    longDesc: "اشتراك VPN سنوي، حماية كاملة.",
-    price: 18, 
-    category: "tools", 
-    img: "https://api.iconify.design/mdi:shield-lock.svg?color=%237cb342",
-    rating: 4, 
-    reviews: 34,
-    stock: 14,
-    features: ["سنة كاملة", "5 أجهزة", "بدون تسجيل"]
-  },
-  { 
-    id: 12, 
-    name: "Adobe Creative Cloud", 
-    desc: "شهر — كل برامج Adobe.", 
-    longDesc: "اشتراك Adobe Creative Cloud لمدة شهر.",
-    price: 22, 
-    category: "tools", 
-    img: "https://api.iconify.design/simple-icons:adobe.svg?color=%23ff0000",
-    rating: 5, 
-    reviews: 51,
-    stock: 7,
-    features: ["كل برامج Adobe", "شهر كامل", "تحديثات مجانية"]
-  },
+  { id: 1, name: "حساب Steam مميز", desc: "حساب Steam فيه ألعاب AAA + مكتبة ضخمة.", longDesc: "حساب Steam مميز يحتوي على أكثر من 50 لعبة AAA.", price: 25, category: "accounts", img: "https://api.iconify.design/mdi:steam.svg?color=%237cb342", badge: "hot", rating: 5, reviews: 47, stock: 5, bestSeller: true, features: ["أكثر من 50 لعبة", "ضمان 30 يوم", "تسليم فوري"] },
+  { id: 2, name: "حساب Epic Games", desc: "ألعاب مجانية أسبوعياً + مكتبة متنوعة.", longDesc: "حساب Epic Games مع مكتبة متنوعة.", price: 15, category: "accounts", img: "https://api.iconify.design/simple-icons:epicgames.svg?color=%237cb342", rating: 4, reviews: 23, stock: 8, badge: "new", features: ["ألعاب مجانية", "عروض حصرية", "ضمان 30 يوم"] },
+  { id: 3, name: "حساب Valorant", desc: "سكنات نادرة + رانك عالي.", longDesc: "حساب Valorant برانك Immortal.", price: 40, category: "accounts", img: "https://api.iconify.design/simple-icons:valorant.svg?color=%23ff5252", rating: 5, reviews: 62, stock: 3, bestSeller: true, features: ["رانك Immortal", "سكنات نادرة", "ضمان كامل"] },
+  { id: 4, name: "حساب PUBG Mobile", desc: "مستوى عالي + سكنات نادرة.", longDesc: "حساب PUBG Mobile بمستوى عالي.", price: 20, category: "accounts", img: "https://api.iconify.design/mdi:target.svg?color=%23ffc107", rating: 4, reviews: 31, stock: 6, features: ["مستوى عالي", "سكنات نادرة", "تسليم فوري"] },
+  { id: 5, name: "اشتراك Netflix", desc: "شهر كامل — باقة Premium 4K.", longDesc: "اشتراك Netflix Premium لمدة شهر كامل.", price: 8, category: "subscriptions", img: "https://api.iconify.design/simple-icons:netflix.svg?color=%23e50914", badge: "hot", rating: 5, reviews: 156, stock: 20, bestSeller: true, features: ["جودة 4K", "4 أجهزة", "بدون إعلانات"] },
+  { id: 6, name: "Spotify Premium", desc: "3 أشهر — استماع بلا حدود.", longDesc: "اشتراك Spotify Premium لمدة 3 أشهر.", price: 6, category: "subscriptions", img: "https://api.iconify.design/simple-icons:spotify.svg?color=%231db954", badge: "new", rating: 5, reviews: 89, stock: 15, features: ["3 أشهر", "بدون إعلانات", "تحميل بدون إنترنت"] },
+  { id: 7, name: "Discord Nitro", desc: "سنة كاملة — ميزات حصرية.", longDesc: "اشتراك Discord Nitro لمدة سنة.", price: 30, category: "subscriptions", img: "https://api.iconify.design/simple-icons:discord.svg?color=%235865f2", rating: 5, reviews: 78, stock: 10, features: ["سنة كاملة", "إيموجي مخصص", "بث HD"] },
+  { id: 8, name: "YouTube Premium", desc: "6 أشهر — بدون إعلانات.", longDesc: "اشتراك YouTube Premium لمدة 6 أشهر.", price: 12, category: "subscriptions", img: "https://api.iconify.design/simple-icons:youtube.svg?color=%23ff0000", badge: "new", rating: 4, reviews: 45, stock: 12, features: ["6 أشهر", "YouTube Music", "تحميل"] },
+  { id: 9, name: "ChatGPT Plus", desc: "شهر — GPT-4 وأدوات AI.", longDesc: "اشتراك ChatGPT Plus لمدة شهر.", price: 15, category: "subscriptions", img: "https://api.iconify.design/simple-icons:openai.svg?color=%2310a37f", rating: 5, reviews: 112, stock: 25, features: ["GPT-4", "سرعة عالية", "أدوات متقدمة"] },
+  { id: 10, name: "Canva Pro", desc: "سنة كاملة — تصميم احترافي.", longDesc: "اشتراك Canva Pro لمدة سنة.", price: 10, category: "tools", img: "https://api.iconify.design/simple-icons:canva.svg?color=%2300c4cc", rating: 5, reviews: 67, stock: 8, features: ["سنة كاملة", "100M+ عنصر", "إزالة الخلفية"] },
+  { id: 11, name: "VPN سنوي", desc: "حماية كاملة + سرعة عالية.", longDesc: "اشتراك VPN سنوي، حماية كاملة.", price: 18, category: "tools", img: "https://api.iconify.design/mdi:shield-lock.svg?color=%237cb342", rating: 4, reviews: 34, stock: 14, features: ["سنة كاملة", "5 أجهزة", "بدون تسجيل"] },
+  { id: 12, name: "Adobe Creative Cloud", desc: "شهر — كل برامج Adobe.", longDesc: "اشتراك Adobe Creative Cloud لمدة شهر.", price: 22, category: "tools", img: "https://api.iconify.design/simple-icons:adobe.svg?color=%23ff0000", rating: 5, reviews: 51, stock: 7, features: ["كل برامج Adobe", "شهر كامل", "تحديثات"] }
 ];
 
-// تعيين المنتجات الاحتياطية مبدئياً
-PRODUCTS = [...FALLBACK_PRODUCTS];
+let PRODUCTS = [...FALLBACK_PRODUCTS];
+
 /* ============================================
    آراء العملاء
    ============================================ */
@@ -245,7 +42,7 @@ const REVIEWS = [
   { name: "أحمد", initial: "أ", rating: 5, text: "خدمة ممتازة وسريعة! استلمت الحساب فوراً بعد الدفع. أنصح الجميع." },
   { name: "سارة", initial: "س", rating: 5, text: "أسعار ممتازة ودعم فني رائع. تعاملت معهم أكثر من مرة." },
   { name: "محمد", initial: "م", rating: 5, text: "أفضل متجر رقمي تعاملت معه. مصداقية وأمان 100%." },
-  { name: "نور", initial: "ن", rating: 4, text: "منتجات أصلية وأسعار منافسة. التسليم كان أسرع من المتوقع." },
+  { name: "نور", initial: "ن", rating: 4, text: "منتجات أصلية وأسعار منافسة. التسليم كان أسرع من المتوقع." }
 ];
 
 /* ============================================
@@ -257,16 +54,8 @@ const FAQS = [
   { q: "ما هي طرق الدفع المتاحة؟", a: "نقبل PayPal، التحويل البنكي، USDT، وطرق دفع محلية أخرى." },
   { q: "هل يمكن الاسترجاع؟", a: "نعم، يمكنك طلب استرجاع خلال 24 ساعة من الشراء إذا لم يكن المنتج يعمل." },
   { q: "كم يستغرق التسليم؟", a: "التسليم فوري خلال دقائق. في أوقات الذروة قد يستغرق حتى 30 دقيقة." },
-  { q: "هل الحسابات آمنة؟", a: "جميع الحسابات أصلية ومضمونة. ننصح بتغيير كلمة المرور بعد الاستلام." },
+  { q: "هل الحسابات آمنة؟", a: "جميع الحسابات أصلية ومضمونة. ننصح بتغيير كلمة المرور بعد الاستلام." }
 ];
-
-/* ============================================
-   ثوابت
-   ============================================ */
-const CART_KEY = 'vinland_cart';
-const SUPABASE_URL = 'https://ncrycgbrstafdouvipzc.supabase.co';
-const SUPABASE_ANON_KEY = 'sb_publishable_6t2dkU27Rkinsoo8MhYAEQ_FSgj4G73';
-const WHATSAPP_NUMBER = '0000000000'; // ← بدّل رقمك هنا
 
 /* ============================================
    أدوات مساعدة
@@ -284,6 +73,54 @@ function renderStars(rating) {
   return '★'.repeat(rating) + '☆'.repeat(5 - rating);
 }
 
+/* ============================================
+   جلب المنتجات من Supabase
+   ============================================ */
+async function fetchProducts() {
+  if (!sb) {
+    console.warn('⚠️ Supabase not loaded, using fallback products');
+    PRODUCTS = [...FALLBACK_PRODUCTS];
+    return;
+  }
+  try {
+    const { data, error } = await sb
+      .from('products')
+      .select('*')
+      .eq('active', true)
+      .order('id', { ascending: true });
+
+    if (error) throw error;
+
+    if (data && data.length > 0) {
+      PRODUCTS = data.map(p => ({
+        id: p.id,
+        name: p.name,
+        desc: p.description,
+        longDesc: p.long_description,
+        price: parseFloat(p.price),
+        category: p.category,
+        img: p.image_url,
+        badge: p.badge,
+        rating: p.rating,
+        reviews: p.reviews_count,
+        stock: p.stock,
+        bestSeller: p.best_seller,
+        features: p.features || []
+      }));
+      console.log('✅ Loaded', PRODUCTS.length, 'products from Supabase');
+    } else {
+      console.warn('⚠️ No products in Supabase, using fallback');
+      PRODUCTS = [...FALLBACK_PRODUCTS];
+    }
+  } catch (err) {
+    console.error('❌ Error fetching products:', err);
+    PRODUCTS = [...FALLBACK_PRODUCTS];
+  }
+}
+
+/* ============================================
+   السلة
+   ============================================ */
 function getCart() {
   return JSON.parse(localStorage.getItem(CART_KEY) || '[]');
 }
@@ -294,12 +131,6 @@ function saveCart(cart) {
   renderCart();
 }
 
-function updateCartBadge() {
-  document.querySelectorAll('.cart-badge').forEach(b => {
-    b.textContent = getCart().reduce((s, i) => s + i.qty, 0);
-  });
-}
-
 function getCartCount() {
   return getCart().reduce((sum, item) => sum + item.qty, 0);
 }
@@ -308,13 +139,17 @@ function getCartTotal() {
   return getCart().reduce((sum, item) => sum + item.price * item.qty, 0);
 }
 
-/* ============================================
-   السلة
-   ============================================ */
+function updateCartBadge() {
+  document.querySelectorAll('.cart-badge').forEach(b => {
+    b.textContent = getCartCount();
+  });
+}
+
 function addToCart(productId) {
   const cart = getCart();
   const product = PRODUCTS.find(p => p.id === productId);
   if (!product) return;
+
   const existing = cart.find(item => item.id === productId);
   if (existing) {
     existing.qty += 1;
@@ -473,9 +308,6 @@ function renderFAQs() {
   });
 }
 
-/* ============================================
-   الفلترة
-   ============================================ */
 function initFilters() {
   const buttons = document.querySelectorAll('.filter-btn');
   buttons.forEach(btn => {
@@ -514,11 +346,6 @@ function initCartDrawer() {
 /* ============================================
    Supabase Auth
    ============================================ */
-let sb = null;
-if (window.supabase) {
-  sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-}
-
 async function signInWithFacebook() {
   try {
     const { data, error } = await sb.auth.signInWithOAuth({
@@ -565,7 +392,7 @@ function onAuthChange(callback) {
 }
 
 /* ============================================
-   تسجيل الدخول - عناصر مشتركة
+   تهيئة Auth
    ============================================ */
 function initAuth() {
   const loginBtn = document.getElementById('loginBtn');
@@ -850,28 +677,21 @@ function initAccountPage() {
 
       <h2 style="font-family:'Amiri',serif;font-size:28px;margin-bottom:20px;">طلباتي</h2>
 
-      ${demoOrders.length === 0 ? `
-        <div class="account-empty" style="padding:40px 20px;">
-          <p>لا توجد طلبات بعد</p>
-          <a href="index.html#products" class="btn" style="margin-top:16px;">ابدأ التسوق</a>
-        </div>
-      ` : `
-        <div class="orders-list">
-          ${demoOrders.map(o => `
-            <div class="order-card">
-              <div class="order-img"><img src="${o.img}" alt="${o.name}"></div>
-              <div class="order-info">
-                <h4>${o.name}</h4>
-                <p>#${o.id} — ${o.date}</p>
-              </div>
-              <div style="font-weight:900;color:var(--grass);font-size:18px;">$${o.price}</div>
-              <span class="order-status ${o.status === 'done' ? 'done' : 'pending'}">
-                ${o.status === 'done' ? '✓ تم التسليم' : 'قيد المعالجة'}
-              </span>
+      <div class="orders-list">
+        ${demoOrders.map(o => `
+          <div class="order-card">
+            <div class="order-img"><img src="${o.img}" alt="${o.name}"></div>
+            <div class="order-info">
+              <h4>${o.name}</h4>
+              <p>#${o.id} — ${o.date}</p>
             </div>
-          `).join('')}
-        </div>
-      `}
+            <div style="font-weight:900;color:var(--grass);font-size:18px;">$${o.price}</div>
+            <span class="order-status ${o.status === 'done' ? 'done' : 'pending'}">
+              ${o.status === 'done' ? '✓ تم التسليم' : 'قيد المعالجة'}
+            </span>
+          </div>
+        `).join('')}
+      </div>
     `;
 
     document.getElementById('editProfileBtn')?.addEventListener('click', () => {
@@ -907,8 +727,7 @@ function renderCartPage() {
   }
 
   const subtotal = getCartTotal();
-  const shipping = 0;
-  const total = subtotal + shipping;
+  const total = subtotal;
 
   container.innerHTML = `
     <div class="cart-page-grid">
@@ -956,8 +775,13 @@ function changeQty(productId, delta) {
   renderCartPage();
 }
 
+/* ============================================
+   التشغيل الرئيسي
+   ============================================ */
 document.addEventListener('DOMContentLoaded', async () => {
-  // أول شي: جلب المنتجات
+  console.log('🚀 Vinland Store — بدء التحميل...');
+
+  // أول شي: جلب المنتجات من Supabase
   await fetchProducts();
 
   // بعدها: تهيئة كل شي
@@ -981,21 +805,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // صفحة السلة
   initCartPage();
-});
 
-  // الرئيسية
-  renderProducts('all');
-  renderBestSellers();
-  renderReviews();
-  renderFAQs();
-  initFilters();
-
-  // صفحة المنتج
-  initProductPage();
-
-  // صفحة الحساب
-  initAccountPage();
-
-  // صفحة السلة
-  initCartPage();
+  console.log('✅ Vinland Store — جاهز!');
 });
