@@ -1,5 +1,5 @@
 /* ============================================
-   Vinland Store — script.js (نسخة نظيفة)
+   Vinland Store — script.js (الكامل مع الحركات)
    ============================================ */
 
 /* ============================================
@@ -8,7 +8,7 @@
 const SUPABASE_URL = 'https://ncrycgbrstafdouvipzc.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_6t2dkU27Rkinsoo8MhYAEQ_FSgj4G73';
 const CART_KEY = 'vinland_cart';
-const WHATSAPP_NUMBER = '0670305009'; // ← بدّل رقمك هنا
+const WHATSAPP_NUMBER = '0000000000'; // ← بدّل رقمك
 
 let sb = null;
 if (window.supabase) {
@@ -73,12 +73,88 @@ function renderStars(rating) {
   return '★'.repeat(rating) + '☆'.repeat(5 - rating);
 }
 
+function formatDateShort(dateStr) {
+  return new Date(dateStr).toLocaleDateString('ar-EG', {
+    year: 'numeric', month: 'short', day: 'numeric'
+  });
+}
+
+/* ============================================
+   Skeleton Loading
+   ============================================ */
+function showSkeleton(containerId, count = 8) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+  container.innerHTML = Array(count).fill(`
+    <div class="skeleton-card">
+      <div class="skeleton skeleton-img"></div>
+      <div class="skeleton skeleton-title"></div>
+      <div class="skeleton skeleton-text"></div>
+      <div class="skeleton skeleton-text" style="width:80%;"></div>
+      <div class="skeleton skeleton-price"></div>
+    </div>
+  `).join('');
+}
+
+/* ============================================
+   Scroll Animations
+   ============================================ */
+function initScrollAnimations() {
+  const elements = document.querySelectorAll('.fade-in-up, .fade-in, .zoom-in');
+  if (elements.length === 0) return;
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+  elements.forEach(el => observer.observe(el));
+}
+
+/* ============================================
+   Confetti
+   ============================================ */
+function fireConfetti() {
+  const colors = ['#7cb342', '#a8e063', '#558b2f', '#ffc107', '#ff5252', '#2196f3'];
+  const container = document.createElement('div');
+  container.className = 'confetti-container';
+  document.body.appendChild(container);
+
+  for (let i = 0; i < 80; i++) {
+    const piece = document.createElement('div');
+    piece.className = 'confetti-piece';
+    piece.style.left = Math.random() * 100 + '%';
+    piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+    piece.style.animationDuration = (Math.random() * 2 + 2) + 's';
+    piece.style.animationDelay = (Math.random() * 0.5) + 's';
+    piece.style.width = (Math.random() * 8 + 6) + 'px';
+    piece.style.height = (Math.random() * 8 + 6) + 'px';
+    piece.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+    container.appendChild(piece);
+  }
+
+  setTimeout(() => container.remove(), 4000);
+}
+
+/* ============================================
+   Button Pulse
+   ============================================ */
+function pulseButton(btn) {
+  if (!btn) return;
+  btn.classList.add('pulse');
+  setTimeout(() => btn.classList.remove('pulse'), 400);
+}
+
 /* ============================================
    جلب المنتجات من Supabase
    ============================================ */
 async function fetchProducts() {
   if (!sb) {
-    console.warn('⚠️ Supabase not loaded, using fallback products');
+    console.warn('⚠️ Supabase not loaded, using fallback');
     PRODUCTS = [...FALLBACK_PRODUCTS];
     return;
   }
@@ -107,15 +183,77 @@ async function fetchProducts() {
         bestSeller: p.best_seller,
         features: p.features || []
       }));
-      console.log('✅ Loaded', PRODUCTS.length, 'products from Supabase');
+      console.log('✅ Loaded', PRODUCTS.length, 'products');
     } else {
-      console.warn('⚠️ No products in Supabase, using fallback');
       PRODUCTS = [...FALLBACK_PRODUCTS];
     }
   } catch (err) {
-    console.error('❌ Error fetching products:', err);
+    console.error('❌ Error:', err);
     PRODUCTS = [...FALLBACK_PRODUCTS];
   }
+}
+
+/* ============================================
+   جلب تقييمات المنتج
+   ============================================ */
+async function fetchProductReviews(productId) {
+  if (!sb) return [];
+  try {
+    const { data, error } = await sb
+      .from('reviews')
+      .select('*')
+      .eq('product_id', productId)
+      .eq('approved', true)
+      .order('created_at', { ascending: false });
+
+    if (error) throw error;
+    return data || [];
+  } catch (err) {
+    console.error('Error fetching reviews:', err);
+    return [];
+  }
+}
+
+/* ============================================
+   عرض التقييمات
+   ============================================ */
+function renderProductReviews(reviews) {
+  if (!reviews || reviews.length === 0) {
+    return `
+      <div class="no-reviews">
+        <img src="https://api.iconify.design/mdi:comment-outline.svg?color=%23bdbdbd" alt="" style="width:60px;height:60px;opacity:0.5;margin:0 auto 12px;">
+        <p>لا توجد تقييمات بعد</p>
+        <p style="font-size:13px;color:var(--gray-400);">كن أول من يقيّم هذا المنتج</p>
+      </div>
+    `;
+  }
+
+  const avg = (reviews.reduce((s, r) => s + r.rating, 0) / reviews.length).toFixed(1);
+
+  return `
+    <div class="reviews-summary">
+      <div class="reviews-avg">
+        <div class="reviews-avg-number">${avg}</div>
+        <div class="reviews-avg-stars">${renderStars(Math.round(avg))}</div>
+        <div class="reviews-avg-count">${reviews.length} تقييم</div>
+      </div>
+      <div class="reviews-list">
+        ${reviews.map(r => `
+          <div class="product-review">
+            <div class="product-review-header">
+              <div class="avatar" style="width:40px;height:40px;font-size:16px;">${(r.user_name || 'U').charAt(0)}</div>
+              <div>
+                <h4>${r.user_name || 'مستخدم'}</h4>
+                <div class="stars" style="font-size:14px;">${renderStars(r.rating)}</div>
+              </div>
+              <span class="review-date">${formatDateShort(r.created_at)}</span>
+            </div>
+            <p>${r.comment || 'بدون تعليق'}</p>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `;
 }
 
 /* ============================================
@@ -129,6 +267,7 @@ function saveCart(cart) {
   localStorage.setItem(CART_KEY, JSON.stringify(cart));
   updateCartBadge();
   renderCart();
+  renderCartPage();
 }
 
 function getCartCount() {
@@ -145,10 +284,13 @@ function updateCartBadge() {
   });
 }
 
-function addToCart(productId) {
+function addToCart(productId, btnElement) {
   const cart = getCart();
   const product = PRODUCTS.find(p => p.id === productId);
   if (!product) return;
+
+  // Pulse animation
+  if (btnElement) pulseButton(btnElement);
 
   const existing = cart.find(item => item.id === productId);
   if (existing) {
@@ -210,20 +352,60 @@ function renderCart() {
   `;
 }
 
-function checkout() {
+async function checkout() {
   const cart = getCart();
   if (cart.length === 0) {
     showToast('السلة فارغة', 'error');
     return;
   }
+
   const total = getCartTotal();
-  let msg = '🛒 طلب جديد من Vinland:\n\n';
+  let orderNumber = 'VL-' + new Date().getFullYear() + '-' + Math.floor(Math.random() * 9000 + 1000);
+
+  if (sb) {
+    try {
+      const { data: { user } } = await sb.auth.getUser();
+      const orderData = {
+        order_number: orderNumber,
+        user_id: user?.id || null,
+        customer_name: user?.user_metadata?.full_name || user?.user_metadata?.name || 'زائر',
+        customer_email: user?.email || null,
+        items: cart,
+        subtotal: total,
+        discount: 0,
+        total: total,
+        status: 'pending'
+      };
+
+      const { error } = await sb.from('orders').insert([orderData]);
+      if (error) throw error;
+      console.log('✅ Order saved:', orderNumber);
+      showToast('✓ تم إنشاء طلبك: ' + orderNumber);
+    } catch (err) {
+      console.error('❌ Failed to save order:', err);
+    }
+  }
+
+  let msg = `🛒 طلب جديد من Vinland:\n\n`;
+  msg += `📋 رقم الطلب: ${orderNumber}\n\n`;
   cart.forEach(item => {
     msg += `• ${item.name} × ${item.qty} = $${item.price * item.qty}\n`;
   });
-  msg += `\n💰 الإجمالي: $${total}`;
+  msg += `\n💰 الإجمالي: $${total}\n`;
+  msg += `\n🔗 تتبع: https://vinlandx.github.io/track.html?id=${orderNumber}`;
+
   const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`;
   window.open(url, '_blank');
+
+  // 🎉 Confetti
+  fireConfetti();
+
+  setTimeout(() => {
+    localStorage.removeItem(CART_KEY);
+    updateCartBadge();
+    renderCart();
+    renderCartPage();
+  }, 1500);
 }
 
 /* ============================================
@@ -233,8 +415,8 @@ function renderProducts(filter = 'all') {
   const grid = document.getElementById('productsGrid');
   if (!grid) return;
   const list = filter === 'all' ? PRODUCTS : PRODUCTS.filter(p => p.category === filter);
-  grid.innerHTML = list.map(p => `
-    <div class="card">
+  grid.innerHTML = list.map((p, i) => `
+    <div class="card fade-in-up" style="animation-delay:${i * 0.05}s">
       ${p.badge ? `<span class="badge ${p.badge}">${p.badge === 'hot' ? 'حار' : p.badge === 'new' ? 'جديد' : 'مميز'}</span>` : ''}
       <a href="product.html?id=${p.id}" class="card-link">
         <div class="img"><img src="${p.img}" alt="${p.name}" loading="lazy"></div>
@@ -244,7 +426,7 @@ function renderProducts(filter = 'all') {
       <div class="stars">${renderStars(p.rating)} <span class="reviews-count">(${p.reviews})</span></div>
       <div class="price-row">
         <span class="price">$${p.price}</span>
-        <button class="add-btn" onclick="addToCart(${p.id})">أضف للسلة</button>
+        <button class="add-btn" onclick="addToCart(${p.id}, this)">أضف للسلة</button>
       </div>
     </div>
   `).join('');
@@ -265,7 +447,7 @@ function renderBestSellers() {
       <p>${p.desc}</p>
       <div class="price-row">
         <span class="price">$${p.price}</span>
-        <button class="add-btn" onclick="addToCart(${p.id})">أضف للسلة</button>
+        <button class="add-btn" onclick="addToCart(${p.id}, this)">أضف للسلة</button>
       </div>
     </div>
   `).join('');
@@ -275,7 +457,7 @@ function renderReviews() {
   const el = document.getElementById('reviewsGrid');
   if (!el) return;
   el.innerHTML = REVIEWS.map(r => `
-    <div class="review-card">
+    <div class="review-card fade-in-up">
       <div class="review-header">
         <div class="avatar">${r.initial}</div>
         <div>
@@ -487,7 +669,7 @@ function trackOrder() {
 /* ============================================
    صفحة المنتج
    ============================================ */
-function initProductPage() {
+async function initProductPage() {
   const page = document.getElementById('productPage');
   if (!page) return;
 
@@ -517,6 +699,8 @@ function initProductPage() {
 
   document.title = product.name + ' — Vinland';
 
+  const productReviews = await fetchProductReviews(productId);
+
   const related = PRODUCTS
     .filter(p => p.category === product.category && p.id !== product.id)
     .slice(0, 4);
@@ -540,12 +724,12 @@ function initProductPage() {
     </div>
 
     <div class="product-main">
-      <div class="product-image">
+      <div class="product-image fade-in">
         ${product.badge ? `<span class="badge ${product.badge}" style="position:absolute;top:20px;left:20px;">${product.badge === 'hot' ? 'حار' : product.badge === 'new' ? 'جديد' : 'مميز'}</span>` : ''}
         <img src="${product.img}" alt="${product.name}">
       </div>
 
-      <div class="product-info">
+      <div class="product-info fade-in-up">
         <h1>${product.name}</h1>
         <div class="rating-row">
           <span>${renderStars(product.rating)}</span>
@@ -558,7 +742,7 @@ function initProductPage() {
           المتوفر: <strong>باقي ${product.stock} فقط!</strong>
         </div>
         <div class="product-actions">
-          <button class="btn" onclick="addToCart(${product.id})">أضف للسلة</button>
+          <button class="btn" onclick="addToCart(${product.id}, this)">أضف للسلة</button>
           <button class="btn-secondary" onclick="buyNow(${product.id})">اشترِ الآن</button>
         </div>
         <div style="margin-top:24px;padding-top:20px;border-top:1px solid var(--border);display:flex;gap:20px;flex-wrap:wrap;font-size:14px;color:var(--gray-600);">
@@ -569,11 +753,19 @@ function initProductPage() {
       </div>
     </div>
 
+    <section class="product-reviews-section fade-in-up">
+      <h2 class="related-title">
+        <img src="https://api.iconify.design/mdi:star.svg?color=%23ffc107" alt="" style="width:28px;height:28px;vertical-align:middle;margin-left:8px;">
+        تقييمات العملاء
+      </h2>
+      ${renderProductReviews(productReviews)}
+    </section>
+
     ${related.length > 0 ? `
-      <h2 class="related-title">منتجات مشابهة</h2>
+      <h2 class="related-title fade-in-up">منتجات مشابهة</h2>
       <div class="products-grid">
         ${related.map(p => `
-          <div class="card">
+          <div class="card fade-in-up">
             ${p.badge ? `<span class="badge ${p.badge}">${p.badge === 'hot' ? 'حار' : p.badge === 'new' ? 'جديد' : 'مميز'}</span>` : ''}
             <a href="product.html?id=${p.id}" class="card-link">
               <div class="img"><img src="${p.img}" alt="${p.name}" loading="lazy"></div>
@@ -583,13 +775,16 @@ function initProductPage() {
             <div class="stars">${renderStars(p.rating)} <span class="reviews-count">(${p.reviews})</span></div>
             <div class="price-row">
               <span class="price">$${p.price}</span>
-              <button class="add-btn" onclick="addToCart(${p.id})">أضف للسلة</button>
+              <button class="add-btn" onclick="addToCart(${p.id}, this)">أضف للسلة</button>
             </div>
           </div>
         `).join('')}
       </div>
     ` : ''}
   `;
+
+  // Scroll animations بعد الرندر
+  setTimeout(initScrollAnimations, 100);
 }
 
 function buyNow(productId) {
@@ -622,7 +817,7 @@ function initAccountPage() {
 
   function showLoginRequired() {
     page.innerHTML = `
-      <div class="account-empty">
+      <div class="account-empty fade-in-up">
         <img src="https://api.iconify.design/mdi:lock-outline.svg?color=%23bdbdbd" alt="" class="empty-icon">
         <h2>يجب تسجيل الدخول</h2>
         <p>سجل دخولك لعرض حسابك وطلباتك</p>
@@ -649,7 +844,7 @@ function initAccountPage() {
     ];
 
     page.innerHTML = `
-      <div class="account-header">
+      <div class="account-header fade-in-up">
         <div class="account-avatar">
           ${avatar ? `<img src="${avatar}" alt="${name}">` : initial}
         </div>
@@ -661,15 +856,15 @@ function initAccountPage() {
       </div>
 
       <div class="account-stats">
-        <div class="stat-card">
+        <div class="stat-card fade-in-up">
           <div class="stat-value">${demoOrders.length}</div>
           <div class="stat-label">طلباتي</div>
         </div>
-        <div class="stat-card">
+        <div class="stat-card fade-in-up">
           <div class="stat-value">${cart.length}</div>
           <div class="stat-label">في السلة</div>
         </div>
-        <div class="stat-card">
+        <div class="stat-card fade-in-up">
           <div class="stat-value">$${demoOrders.reduce((s, o) => s + o.price, 0)}</div>
           <div class="stat-label">إجمالي الصرف</div>
         </div>
@@ -679,7 +874,7 @@ function initAccountPage() {
 
       <div class="orders-list">
         ${demoOrders.map(o => `
-          <div class="order-card">
+          <div class="order-card fade-in-up">
             <div class="order-img"><img src="${o.img}" alt="${o.name}"></div>
             <div class="order-info">
               <h4>${o.name}</h4>
@@ -697,6 +892,8 @@ function initAccountPage() {
     document.getElementById('editProfileBtn')?.addEventListener('click', () => {
       showToast('قريباً: تعديل الملف الشخصي');
     });
+
+    setTimeout(initScrollAnimations, 100);
   }
 }
 
@@ -716,7 +913,7 @@ function renderCartPage() {
 
   if (cart.length === 0) {
     container.innerHTML = `
-      <div class="cart-page-empty">
+      <div class="cart-page-empty fade-in-up">
         <img src="https://api.iconify.design/mdi:cart-outline.svg?color=%23bdbdbd" alt="" class="empty-icon">
         <h2>سلتك فارغة</h2>
         <p>ابدأ التسوق وأضف منتجاتك المفضلة</p>
@@ -733,7 +930,7 @@ function renderCartPage() {
     <div class="cart-page-grid">
       <div class="cart-page-items">
         ${cart.map(item => `
-          <div class="cart-page-item">
+          <div class="cart-page-item fade-in-up">
             <div class="cp-img"><img src="${item.img}" alt="${item.name}"></div>
             <div class="cp-info">
               <h3>${item.name}</h3>
@@ -750,7 +947,7 @@ function renderCartPage() {
         `).join('')}
       </div>
 
-      <aside class="cart-page-summary">
+      <aside class="cart-page-summary fade-in-up">
         <h3>ملخص الطلب</h3>
         <div class="summary-row"><span>المجموع الفرعي</span><span>$${subtotal}</span></div>
         <div class="summary-row"><span>التوصيل</span><span>مجاني</span></div>
@@ -760,6 +957,8 @@ function renderCartPage() {
       </aside>
     </div>
   `;
+
+  setTimeout(initScrollAnimations, 100);
 }
 
 function changeQty(productId, delta) {
@@ -772,7 +971,107 @@ function changeQty(productId, delta) {
   } else {
     saveCart(cart);
   }
-  renderCartPage();
+}
+
+/* ============================================
+   صفحة الطلبات
+   ============================================ */
+async function initOrdersPage() {
+  const container = document.getElementById('ordersContainer');
+  if (!container) return;
+
+  if (!sb) return;
+
+  try {
+    const { data: { user } } = await sb.auth.getUser();
+
+    if (!user) {
+      container.innerHTML = `
+        <div class="account-empty fade-in-up">
+          <img src="https://api.iconify.design/mdi:lock-outline.svg?color=%23bdbdbd" alt="" class="empty-icon">
+          <h2>يجب تسجيل الدخول</h2>
+          <p>سجل دخولك لعرض طلباتك</p>
+          <a href="account.html" class="btn">تسجيل الدخول</a>
+        </div>`;
+      return;
+    }
+
+    const { data: orders, error } = await sb
+      .from('orders')
+      .select('*')
+      .eq('user_id', user.id)
+      .order('created_at', { ascending: false });
+
+    if (error) throw error;
+
+    if (!orders || orders.length === 0) {
+      container.innerHTML = `
+        <div class="account-empty fade-in-up">
+          <img src="https://api.iconify.design/mdi:package-variant-closed.svg?color=%23bdbdbd" alt="" class="empty-icon">
+          <h2>لا توجد طلبات</h2>
+          <p>لم تقم بأي طلبات بعد</p>
+          <a href="index.html#products" class="btn">ابدأ التسوق</a>
+        </div>`;
+      return;
+    }
+
+    container.innerHTML = `
+      <div class="orders-list">
+        ${orders.map(o => {
+          const date = formatDateShort(o.created_at);
+          const statusText = {
+            'pending': 'قيد المراجعة',
+            'processing': 'قيد المعالجة',
+            'shipped': 'قيد التسليم',
+            'delivered': 'تم التسليم',
+            'cancelled': 'ملغي'
+          }[o.status] || o.status;
+          const statusClass = o.status === 'delivered' ? 'done' : 'pending';
+
+          return `
+            <div class="order-card fade-in-up" style="flex-direction:column;align-items:stretch;gap:14px;padding:24px;">
+              <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
+                <div>
+                  <strong style="font-size:18px;color:var(--grass-dark);">${o.order_number}</strong>
+                  <p style="color:var(--gray-600);font-size:13px;margin-top:4px;">${date}</p>
+                </div>
+                <span class="order-status ${statusClass}">${statusText}</span>
+              </div>
+
+              <div style="border-top:1px solid var(--border);padding-top:14px;">
+                ${(o.items || []).map(item => `
+                  <div style="display:flex;align-items:center;gap:12px;padding:8px 0;">
+                    <div style="width:40px;height:40px;background:var(--grass-pale);border-radius:8px;padding:6px;display:flex;align-items:center;justify-content:center;">
+                      <img src="${item.img}" alt="" style="max-width:100%;max-height:100%;object-fit:contain;">
+                    </div>
+                    <div style="flex:1;">
+                      <strong style="font-size:14px;">${item.name}</strong>
+                      <span style="color:var(--gray-600);font-size:12px;"> × ${item.qty}</span>
+                    </div>
+                    <span style="color:var(--grass);font-weight:700;">$${item.price * item.qty}</span>
+                  </div>
+                `).join('')}
+              </div>
+
+              <div style="display:flex;justify-content:space-between;align-items:center;border-top:2px solid var(--border);padding-top:14px;">
+                <span style="font-weight:700;">الإجمالي:</span>
+                <span style="font-family:'Tajawal';font-size:22px;font-weight:900;color:var(--grass);">$${o.total}</span>
+              </div>
+
+              <a href="track.html?id=${o.order_number}" class="btn-secondary" style="text-align:center;padding:12px;font-size:14px;">
+                تتبع الطلب
+              </a>
+            </div>
+          `;
+        }).join('')}
+      </div>
+    `;
+
+    setTimeout(initScrollAnimations, 100);
+
+  } catch (err) {
+    console.error('Error loading orders:', err);
+  }
 }
 
 /* ============================================
@@ -780,6 +1079,10 @@ function changeQty(productId, delta) {
    ============================================ */
 document.addEventListener('DOMContentLoaded', async () => {
   console.log('🚀 Vinland Store — بدء التحميل...');
+
+  // Skeleton Loading
+  showSkeleton('productsGrid', 8);
+  showSkeleton('bestSellers', 3);
 
   await fetchProducts();
 
@@ -793,9 +1096,13 @@ document.addEventListener('DOMContentLoaded', async () => {
   renderReviews();
   renderFAQs();
   initFilters();
-  initProductPage();
+  await initProductPage();
   initAccountPage();
   initCartPage();
+  initOrdersPage();
+
+  // Scroll animations
+  setTimeout(initScrollAnimations, 200);
 
   console.log('✅ Vinland Store — جاهز!');
 });
