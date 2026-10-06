@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Saga Store — متجر الشمال</title>
+<title>Vinland — متجر رقمي</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -20,9 +20,9 @@
   :root {
     --grass: #a8e063;
     --grass-dark: #7cb342;
-    --yellow: #f9d423;
+    --grass-light: #d4f5a8;
     --white: #ffffff;
-    --soft: #eaffd6;
+    --soft: #f0fff0;
   }
 
   html, body {
@@ -32,7 +32,7 @@
     color: var(--white);
   }
 
-  /* ===== الخلفية مع Blur ===== */
+  /* ===== الخلفية ===== */
   .bg-image {
     position: fixed;
     top: -5%;
@@ -41,17 +41,16 @@
     height: 110vh;
     background: #0a1f14 url('background.jpg') center center / cover no-repeat;
     z-index: -3;
-    filter: brightness(0.45) saturate(1.3) blur(6px);
+    filter: brightness(0.4) saturate(1.3) blur(7px);
     animation: blurPulse 15s ease-in-out infinite alternate;
     pointer-events: none;
   }
 
   @keyframes blurPulse {
-    from { filter: brightness(0.45) saturate(1.3) blur(5px); }
-    to   { filter: brightness(0.5)  saturate(1.4) blur(10px); }
+    from { filter: brightness(0.4) saturate(1.3) blur(6px); }
+    to   { filter: brightness(0.5) saturate(1.4) blur(11px); }
   }
 
-  /* تعتيم أخضر فوق الصورة */
   .overlay {
     position: fixed;
     top: 0;
@@ -61,9 +60,9 @@
     z-index: -2;
     background: linear-gradient(
       180deg,
-      rgba(4, 20, 12, 0.65) 0%,
-      rgba(10, 31, 20, 0.35) 50%,
-      rgba(4, 20, 12, 0.75) 100%
+      rgba(4, 20, 12, 0.7) 0%,
+      rgba(10, 31, 20, 0.4) 50%,
+      rgba(4, 20, 12, 0.8) 100%
     );
     pointer-events: none;
   }
@@ -76,7 +75,7 @@
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     background: rgba(10, 31, 20, 0.5);
-    border-bottom: 1px solid rgba(168, 224, 99, 0.2);
+    border-bottom: 1px solid rgba(168, 224, 99, 0.25);
     padding: 16px 40px;
     display: flex;
     justify-content: space-between;
@@ -85,13 +84,17 @@
 
   .logo {
     font-family: 'Amiri', serif;
-    font-size: 26px;
+    font-size: 30px;
     font-weight: 700;
     letter-spacing: 1px;
-    color: var(--yellow);
+    color: var(--white);
     text-shadow:
-      0 0 15px rgba(249, 212, 35, 0.6),
-      0 0 30px rgba(168, 224, 99, 0.4);
+      0 0 15px rgba(168, 224, 99, 0.8),
+      0 0 30px rgba(168, 224, 99, 0.5);
+  }
+
+  .logo span {
+    color: var(--grass);
   }
 
   nav a {
@@ -105,8 +108,8 @@
   }
 
   nav a:hover {
-    color: var(--yellow);
-    text-shadow: 0 0 15px rgba(249, 212, 35, 0.9);
+    color: var(--grass);
+    text-shadow: 0 0 15px rgba(168, 224, 99, 0.9);
   }
 
   /* ===== الهيرو ===== */
@@ -118,28 +121,28 @@
 
   .hero h1 {
     font-family: 'Amiri', serif;
-    font-size: clamp(38px, 7vw, 80px);
+    font-size: clamp(40px, 8vw, 90px);
     font-weight: 700;
     margin-bottom: 24px;
     color: var(--white);
     text-shadow:
-      0 0 20px rgba(255, 255, 255, 0.6),
-      0 0 40px rgba(249, 212, 35, 0.5),
-      0 0 60px rgba(168, 224, 99, 0.4);
+      0 0 20px rgba(255, 255, 255, 0.5),
+      0 0 40px rgba(168, 224, 99, 0.6),
+      0 0 70px rgba(168, 224, 99, 0.4);
     animation: glow 4s ease-in-out infinite alternate;
   }
 
   @keyframes glow {
     from {
       text-shadow:
-        0 0 15px rgba(255, 255, 255, 0.5),
-        0 0 30px rgba(249, 212, 35, 0.4);
+        0 0 15px rgba(255, 255, 255, 0.4),
+        0 0 30px rgba(168, 224, 99, 0.5);
     }
     to {
       text-shadow:
-        0 0 25px rgba(255, 255, 255, 0.8),
-        0 0 50px rgba(249, 212, 35, 0.7),
-        0 0 80px rgba(168, 224, 99, 0.5);
+        0 0 25px rgba(255, 255, 255, 0.7),
+        0 0 55px rgba(168, 224, 99, 0.8),
+        0 0 90px rgba(168, 224, 99, 0.5);
     }
   }
 
@@ -154,7 +157,7 @@
 
   .btn {
     display: inline-block;
-    padding: 15px 40px;
+    padding: 15px 42px;
     background: linear-gradient(135deg, var(--grass), var(--grass-dark));
     color: #0a1f14;
     font-weight: 800;
@@ -165,14 +168,14 @@
     text-decoration: none;
     box-shadow:
       0 0 25px rgba(168, 224, 99, 0.6),
-      0 0 50px rgba(249, 212, 35, 0.3);
+      0 0 50px rgba(168, 224, 99, 0.3);
     transition: 0.3s;
   }
 
   .btn:hover {
     transform: translateY(-3px);
     box-shadow:
-      0 0 40px rgba(249, 212, 35, 0.9),
+      0 0 45px rgba(168, 224, 99, 0.95),
       0 0 80px rgba(168, 224, 99, 0.6);
     color: #04140c;
   }
@@ -191,19 +194,37 @@
     background: rgba(10, 31, 20, 0.5);
     backdrop-filter: blur(18px);
     -webkit-backdrop-filter: blur(18px);
-    border: 1px solid rgba(168, 224, 99, 0.3);
+    border: 1px solid rgba(168, 224, 99, 0.35);
     border-radius: 20px;
-    padding: 20px;
+    padding: 22px;
     transition: 0.4s;
+    position: relative;
   }
 
   .card:hover {
     transform: translateY(-8px);
-    border-color: var(--yellow);
+    border-color: var(--grass);
     box-shadow:
-      0 20px 60px rgba(168, 224, 99, 0.3),
-      0 0 40px rgba(249, 212, 35, 0.2);
+      0 20px 60px rgba(168, 224, 99, 0.35),
+      0 0 40px rgba(168, 224, 99, 0.25);
   }
+
+  /* شارة */
+  .badge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background: var(--grass);
+    color: #0a1f14;
+    font-size: 11px;
+    font-weight: 900;
+    padding: 4px 10px;
+    border-radius: 20px;
+    box-shadow: 0 0 15px rgba(168, 224, 99, 0.7);
+  }
+
+  .badge.hot { background: #ff5252; color: #fff; }
+  .badge.new { background: #fff; color: #0a1f14; }
 
   .card .img {
     width: 100%;
@@ -213,10 +234,10 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 60px;
+    font-size: 64px;
     margin-bottom: 16px;
     box-shadow: inset 0 0 30px rgba(0,0,0,0.5);
-    border: 1px solid rgba(168, 224, 99, 0.2);
+    border: 1px solid rgba(168, 224, 99, 0.25);
   }
 
   .card h3 {
@@ -224,8 +245,8 @@
     font-size: 21px;
     font-weight: 700;
     margin-bottom: 8px;
-    color: var(--yellow);
-    text-shadow: 0 0 12px rgba(249, 212, 35, 0.4);
+    color: var(--white);
+    text-shadow: 0 0 12px rgba(168, 224, 99, 0.4);
   }
 
   .card p {
@@ -233,6 +254,7 @@
     color: var(--soft);
     margin-bottom: 16px;
     line-height: 1.7;
+    opacity: 0.9;
   }
 
   .card .price-row {
@@ -262,27 +284,29 @@
   }
 
   .add-btn:hover {
-    background: var(--yellow);
+    background: var(--grass);
     color: #0a1f14;
-    border-color: var(--yellow);
-    box-shadow: 0 0 25px rgba(249, 212, 35, 0.8);
+    border-color: var(--grass);
+    box-shadow: 0 0 25px rgba(168, 224, 99, 0.9);
   }
 
+  /* ===== الفوتر ===== */
   footer {
     text-align: center;
     padding: 40px 20px;
     color: var(--soft);
-    border-top: 1px solid rgba(168, 224, 99, 0.2);
+    border-top: 1px solid rgba(168, 224, 99, 0.25);
     margin-top: 40px;
     backdrop-filter: blur(10px);
     background: rgba(4, 20, 12, 0.5);
   }
 
   footer span {
-    color: var(--yellow);
+    color: var(--grass);
     font-weight: 700;
   }
 
+  /* ===== إشعار ===== */
   .toast {
     position: fixed;
     bottom: 30px;
@@ -290,12 +314,12 @@
     transform: translateX(-50%) translateY(100px);
     background: rgba(10, 31, 20, 0.95);
     backdrop-filter: blur(20px);
-    border: 1px solid var(--yellow);
-    color: var(--yellow);
+    border: 1px solid var(--grass);
+    color: var(--grass);
     padding: 14px 30px;
     border-radius: 50px;
     font-weight: 700;
-    box-shadow: 0 0 40px rgba(249, 212, 35, 0.6);
+    box-shadow: 0 0 40px rgba(168, 224, 99, 0.6);
     transition: 0.4s;
     z-index: 100;
     opacity: 0;
@@ -308,33 +332,32 @@
 
   .cart-badge {
     display: inline-block;
-    background: var(--yellow);
+    background: var(--grass);
     color: #0a1f14;
     border-radius: 50%;
     padding: 2px 9px;
     font-size: 12px;
     font-weight: 900;
     margin-right: 6px;
-    box-shadow: 0 0 12px rgba(249, 212, 35, 0.8);
+    box-shadow: 0 0 12px rgba(168, 224, 99, 0.8);
   }
 
   @media (max-width: 600px) {
     header { padding: 14px 18px; }
     nav a { margin: 0 6px; font-size: 13px; }
     .products { padding: 40px 18px; }
-    .logo { font-size: 20px; }
+    .logo { font-size: 22px; }
     .hero { padding: 80px 18px 60px; }
   }
 </style>
 </head>
 <body>
 
-<!-- 🖼️ خلفية Wallhaven مع Blur متحرك -->
 <div class="bg-image"></div>
 <div class="overlay"></div>
 
 <header>
-  <div class="logo">⚔️ SAGA STORE</div>
+  <div class="logo">🌿 Vin<span>land</span></div>
   <nav>
     <a href="#">الرئيسية</a>
     <a href="#products">المنتجات</a>
@@ -344,89 +367,114 @@
 </header>
 
 <section class="hero">
-  <h1>أرض المحاربين</h1>
-  <p>منتجات مستوحاة من عالم الفايكنغ — قوة، حرية، ومغامرة لا تنتهي.</p>
+  <h1>Vinland</h1>
+  <p>متجرك الرقمي الأول — حسابات، اشتراكات، وخدمات بأفضل الأسعار.</p>
   <a href="#products" class="btn">تسوّق الآن</a>
 </section>
 
 <section class="products" id="products">
 
   <div class="card">
-    <div class="img">🪓</div>
-    <h3>فأس الفايكنغ</h3>
-    <p>فأس مصنوع يدوياً بتصميم شمالي أصيل.</p>
+    <span class="badge hot">🔥 حار</span>
+    <div class="img">🎮</div>
+    <h3>حساب Steam مميز</h3>
+    <p>حساب Steam فيه ألعاب AAA + مكتبة ضخمة.</p>
     <div class="price-row">
-      <span class="price">$49</span>
-      <button class="add-btn" data-name="فأس الفايكنغ">أضف للسلة</button>
+      <span class="price">$25</span>
+      <button class="add-btn" data-name="حساب Steam">أضف للسلة</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <span class="badge">⭐ مميز</span>
+    <div class="img">🎬</div>
+    <h3>اشتراك Netflix</h3>
+    <p>شهر كامل — باقة Premium 4K بدون إعلانات.</p>
+    <div class="price-row">
+      <span class="price">$8</span>
+      <button class="add-btn" data-name="Netflix">أضف للسلة</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <span class="badge new">✨ جديد</span>
+    <div class="img">🎵</div>
+    <h3>Spotify Premium</h3>
+    <p>3 أشهر — استماع بلا حدود بدون إعلانات.</p>
+    <div class="price-row">
+      <span class="price">$6</span>
+      <button class="add-btn" data-name="Spotify">أضف للسلة</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <span class="badge hot">🔥 حار</span>
+    <div class="img">💬</div>
+    <h3>Discord Nitro</h3>
+    <p>سنة كاملة — ميزات حصرية وإيموجي مخصص.</p>
+    <div class="price-row">
+      <span class="price">$30</span>
+      <button class="add-btn" data-name="Discord Nitro">أضف للسلة</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="img">🎨</div>
+    <h3>Canva Pro</h3>
+    <p>سنة كاملة — تصميم احترافي بدون قيود.</p>
+    <div class="price-row">
+      <span class="price">$10</span>
+      <button class="add-btn" data-name="Canva Pro">أضف للسلة</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="img">🤖</div>
+    <h3>ChatGPT Plus</h3>
+    <p>شهر — GPT-4 وأدوات الذكاء الاصطناعي.</p>
+    <div class="price-row">
+      <span class="price">$15</span>
+      <button class="add-btn" data-name="ChatGPT Plus">أضف للسلة</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <span class="badge new">✨ جديد</span>
+    <div class="img">📺</div>
+    <h3>YouTube Premium</h3>
+    <p>6 أشهر — بدون إعلانات + YouTube Music.</p>
+    <div class="price-row">
+      <span class="price">$12</span>
+      <button class="add-btn" data-name="YouTube Premium">أضف للسلة</button>
     </div>
   </div>
 
   <div class="card">
     <div class="img">🛡️</div>
-    <h3>درع المحارب</h3>
-    <p>درع خشبي بنقوش رونية قديمة.</p>
+    <h3>VPN سنوي</h3>
+    <p>حماية كاملة + سرعة عالية بدون تسجيل.</p>
     <div class="price-row">
-      <span class="price">$79</span>
-      <button class="add-btn" data-name="درع المحارب">أضف للسلة</button>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="img">⚔️</div>
-    <h3>سيف الثأر</h3>
-    <p>سيف حاد بتصميم أنيق وحقيبة جلدية.</p>
-    <div class="price-row">
-      <span class="price">$120</span>
-      <button class="add-btn" data-name="سيف الثأر">أضف للسلة</button>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="img">🧭</div>
-    <h3>بوصلة المستكشف</h3>
-    <p>بوصلة نحاسية للبحث عن أرض جديدة.</p>
-    <div class="price-row">
-      <span class="price">$35</span>
-      <button class="add-btn" data-name="بوصلة المستكشف">أضف للسلة</button>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="img">🍺</div>
-    <h3>كوب الميد</h3>
-    <p>كوب خشبي منقوش للاحتفال مع الرفاق.</p>
-    <div class="price-row">
-      <span class="price">$25</span>
-      <button class="add-btn" data-name="كوب الميد">أضف للسلة</button>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="img">📜</div>
-    <h3>خريطة فينلاند</h3>
-    <p>خريطة قديمة على ورق معتّق.</p>
-    <div class="price-row">
-      <span class="price">$19</span>
-      <button class="add-btn" data-name="خريطة فينلاند">أضف للسلة</button>
+      <span class="price">$18</span>
+      <button class="add-btn" data-name="VPN">أضف للسلة</button>
     </div>
   </div>
 
 </section>
 
 <footer>
-  © 2025 <span>SAGA STORE</span> — كل الحقوق محفوظة ⚔️
+  © 2025 <span>Vinland</span> — كل الحقوق محفوظة 🌿
 </footer>
 
 <div class="toast" id="toast">✓ تمت الإضافة للسلة</div>
 
 <script>
-  let cart = JSON.parse(localStorage.getItem('saga_cart') || '[]');
+  let cart = JSON.parse(localStorage.getItem('vinland_cart') || '[]');
   const cartCount = document.getElementById('cartCount');
   const toast = document.getElementById('toast');
 
   function updateCart() {
     cartCount.textContent = cart.length;
-    localStorage.setItem('saga_cart', JSON.stringify(cart));
+    localStorage.setItem('vinland_cart', JSON.stringify(cart));
   }
 
   function showToast(msg) {
