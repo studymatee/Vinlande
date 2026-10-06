@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Saga Store — متجر الشمال</title>
 
-<!-- خطوط عربية حلوة -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Tajawal:wght@400;700;900&family=Amiri:wght@700&display=swap" rel="stylesheet">
@@ -33,19 +32,20 @@
     color: var(--white);
   }
 
-  /* ===== الفيديو الخلفي ===== */
-  #bgVideo {
+  /* ===== الخلفية الثابتة ===== */
+  .bg-image {
     position: fixed;
     top: 0;
     left: 0;
     width: 100vw;
     height: 100vh;
-    object-fit: cover;
+    background: url('background.jpg') center center / cover no-repeat;
     z-index: -3;
-    filter: brightness(0.5) saturate(1.2);
+    filter: brightness(0.55) saturate(1.2);
     pointer-events: none;
   }
 
+  /* تعتيم أخضر خفيف فوق الصورة */
   .overlay {
     position: fixed;
     top: 0;
@@ -323,11 +323,8 @@
 </head>
 <body>
 
-<!-- 🎬 فيديو Vinland Saga خلفي — مسار كامل -->
-<video id="bgVideo" autoplay muted loop playsinline preload="auto">
-  <source src="background.mp4" type="video/mp4">
-</video>
-
+<!-- 🖼️ خلفية ثابتة -->
+<div class="bg-image"></div>
 <div class="overlay"></div>
 
 <header>
@@ -417,17 +414,6 @@
 <div class="toast" id="toast">✓ تمت الإضافة للسلة</div>
 
 <script>
-  /* تشغيل الفيديو */
-  const video = document.getElementById('bgVideo');
-  if (video) {
-    video.muted = true;
-    video.play().catch(() => {
-      document.addEventListener('click', () => video.play(), { once: true });
-      document.addEventListener('touchstart', () => video.play(), { once: true });
-    });
-  }
-
-  /* السلة */
   let cart = JSON.parse(localStorage.getItem('saga_cart') || '[]');
   const cartCount = document.getElementById('cartCount');
   const toast = document.getElementById('toast');
