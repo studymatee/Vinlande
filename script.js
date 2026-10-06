@@ -67,15 +67,14 @@ async function fetchProducts() {
 }
 
 /* ============================================
-   بيانات المنتجات
+   Fallback Products (احتياطي)
    ============================================ */
-const PRODUCTS = [
-  // ===== حسابات =====
+const FALLBACK_PRODUCTS = [
   { 
     id: 1, 
     name: "حساب Steam مميز", 
     desc: "حساب Steam فيه ألعاب AAA + مكتبة ضخمة.", 
-    longDesc: "حساب Steam مميز يحتوي على أكثر من 50 لعبة AAA، منها Cyberpunk 2077, GTA V, Red Dead Redemption 2. الحساب نظيف وبدون أي مشاكل، ويأتي مع ضمان كامل لمدة 30 يوم.",
+    longDesc: "حساب Steam مميز يحتوي على أكثر من 50 لعبة AAA.",
     price: 25, 
     category: "accounts", 
     img: "https://api.iconify.design/mdi:steam.svg?color=%237cb342",
@@ -90,7 +89,7 @@ const PRODUCTS = [
     id: 2, 
     name: "حساب Epic Games", 
     desc: "ألعاب مجانية أسبوعياً + مكتبة متنوعة.", 
-    longDesc: "حساب Epic Games مع مكتبة متنوعة من الألعاب المجانية، ووصول لأحدث العروض الحصرية.",
+    longDesc: "حساب Epic Games مع مكتبة متنوعة من الألعاب المجانية.",
     price: 15, 
     category: "accounts", 
     img: "https://api.iconify.design/simple-icons:epicgames.svg?color=%237cb342",
@@ -98,13 +97,13 @@ const PRODUCTS = [
     reviews: 23,
     stock: 8,
     badge: "new",
-    features: ["ألعاب مجانية أسبوعياً", "عروض حصرية", "ضمان 30 يوم"]
+    features: ["ألعاب مجانية", "عروض حصرية", "ضمان 30 يوم"]
   },
   { 
     id: 3, 
     name: "حساب Valorant", 
     desc: "سكنات نادرة + رانك عالي.", 
-    longDesc: "حساب Valorant برانك Immortal، مع سكنات نادرة من Elderflame وGlitchpop.",
+    longDesc: "حساب Valorant برانك Immortal، مع سكنات نادرة.",
     price: 40, 
     category: "accounts", 
     img: "https://api.iconify.design/simple-icons:valorant.svg?color=%23ff5252",
@@ -118,7 +117,7 @@ const PRODUCTS = [
     id: 4, 
     name: "حساب PUBG Mobile", 
     desc: "مستوى عالي + سكنات نادرة.", 
-    longDesc: "حساب PUBG Mobile بمستوى عالي، مع سكنات نادرة ومكافآت حصرية.",
+    longDesc: "حساب PUBG Mobile بمستوى عالي، مع سكنات نادرة.",
     price: 20, 
     category: "accounts", 
     img: "https://api.iconify.design/mdi:target.svg?color=%23ffc107",
@@ -127,13 +126,11 @@ const PRODUCTS = [
     stock: 6,
     features: ["مستوى عالي", "سكنات نادرة", "تسليم فوري"]
   },
-
-  // ===== اشتراكات =====
   { 
     id: 5, 
     name: "اشتراك Netflix", 
     desc: "شهر كامل — باقة Premium 4K بدون إعلانات.", 
-    longDesc: "اشتراك Netflix Premium لمدة شهر كامل، جودة 4K Ultra HD، بدون إعلانات، يمكن استخدامه على 4 أجهزة في نفس الوقت.",
+    longDesc: "اشتراك Netflix Premium لمدة شهر كامل، جودة 4K.",
     price: 8, 
     category: "subscriptions", 
     img: "https://api.iconify.design/simple-icons:netflix.svg?color=%23e50914",
@@ -148,7 +145,7 @@ const PRODUCTS = [
     id: 6, 
     name: "Spotify Premium", 
     desc: "3 أشهر — استماع بلا حدود بدون إعلانات.", 
-    longDesc: "اشتراك Spotify Premium لمدة 3 أشهر، استماع بلا حدود، تحميل الأغاني بدون إنترنت، بدون إعلانات.",
+    longDesc: "اشتراك Spotify Premium لمدة 3 أشهر.",
     price: 6, 
     category: "subscriptions", 
     img: "https://api.iconify.design/simple-icons:spotify.svg?color=%231db954",
@@ -162,7 +159,7 @@ const PRODUCTS = [
     id: 7, 
     name: "Discord Nitro", 
     desc: "سنة كاملة — ميزات حصرية وإيموجي مخصص.", 
-    longDesc: "اشتراك Discord Nitro لمدة سنة كاملة، مع إيموجي مخصص، تحميل بحجم أكبر، وبث بجودة عالية.",
+    longDesc: "اشتراك Discord Nitro لمدة سنة كاملة.",
     price: 30, 
     category: "subscriptions", 
     img: "https://api.iconify.design/simple-icons:discord.svg?color=%235865f2",
@@ -175,7 +172,7 @@ const PRODUCTS = [
     id: 8, 
     name: "YouTube Premium", 
     desc: "6 أشهر — بدون إعلانات + YouTube Music.", 
-    longDesc: "اشتراك YouTube Premium لمدة 6 أشهر، بدون إعلانات، مع YouTube Music، وتحميل الفيديوهات.",
+    longDesc: "اشتراك YouTube Premium لمدة 6 أشهر.",
     price: 12, 
     category: "subscriptions", 
     img: "https://api.iconify.design/simple-icons:youtube.svg?color=%23ff0000",
@@ -189,7 +186,7 @@ const PRODUCTS = [
     id: 9, 
     name: "ChatGPT Plus", 
     desc: "شهر — GPT-4 وأدوات الذكاء الاصطناعي.", 
-    longDesc: "اشتراك ChatGPT Plus لمدة شهر، وصول لـ GPT-4، سرعة أعلى، ووصول للأدوات المتقدمة.",
+    longDesc: "اشتراك ChatGPT Plus لمدة شهر، وصول لـ GPT-4.",
     price: 15, 
     category: "subscriptions", 
     img: "https://api.iconify.design/simple-icons:openai.svg?color=%2310a37f",
@@ -198,13 +195,11 @@ const PRODUCTS = [
     stock: 25,
     features: ["GPT-4", "سرعة عالية", "أدوات متقدمة"]
   },
-
-  // ===== أدوات =====
   { 
     id: 10, 
     name: "Canva Pro", 
     desc: "سنة كاملة — تصميم احترافي بدون قيود.", 
-    longDesc: "اشتراك Canva Pro لمدة سنة، وصول لأكثر من 100 مليون عنصر تصميم، قوالب حصرية، وإزالة الخلفية.",
+    longDesc: "اشتراك Canva Pro لمدة سنة.",
     price: 10, 
     category: "tools", 
     img: "https://api.iconify.design/simple-icons:canva.svg?color=%2300c4cc",
@@ -217,7 +212,7 @@ const PRODUCTS = [
     id: 11, 
     name: "VPN سنوي", 
     desc: "حماية كاملة + سرعة عالية بدون تسجيل.", 
-    longDesc: "اشتراك VPN سنوي، حماية كاملة، سرعة عالية، بدون تسجيل، يعمل على 5 أجهزة.",
+    longDesc: "اشتراك VPN سنوي، حماية كاملة.",
     price: 18, 
     category: "tools", 
     img: "https://api.iconify.design/mdi:shield-lock.svg?color=%237cb342",
@@ -230,7 +225,7 @@ const PRODUCTS = [
     id: 12, 
     name: "Adobe Creative Cloud", 
     desc: "شهر — كل برامج Adobe.", 
-    longDesc: "اشتراك Adobe Creative Cloud لمدة شهر، يشمل Photoshop, Illustrator, Premiere Pro, After Effects وغيرها.",
+    longDesc: "اشتراك Adobe Creative Cloud لمدة شهر.",
     price: 22, 
     category: "tools", 
     img: "https://api.iconify.design/simple-icons:adobe.svg?color=%23ff0000",
@@ -241,6 +236,8 @@ const PRODUCTS = [
   },
 ];
 
+// تعيين المنتجات الاحتياطية مبدئياً
+PRODUCTS = [...FALLBACK_PRODUCTS];
 /* ============================================
    آراء العملاء
    ============================================ */
