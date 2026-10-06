@@ -19,11 +19,11 @@
   }
 
   :root {
-    --grass: #a8e063;        /* أخضر عشبي */
-    --grass-dark: #7cb342;   /* أخضر عشبي غامق */
-    --yellow: #f9d423;       /* أصفر ذهبي */
+    --grass: #a8e063;
+    --grass-dark: #7cb342;
+    --yellow: #f9d423;
     --white: #ffffff;
-    --soft: #eaffd6;         /* أبيض مخضرّ */
+    --soft: #eaffd6;
   }
 
   html, body {
@@ -46,7 +46,6 @@
     pointer-events: none;
   }
 
-  /* تعتيم خفيف فوق الفيديو */
   .overlay {
     position: fixed;
     top: 0;
@@ -144,7 +143,6 @@
     max-width: 620px;
     margin: 0 auto 34px;
     line-height: 1.8;
-    font-weight: 400;
     text-shadow: 0 2px 12px rgba(0,0,0,0.8);
   }
 
@@ -154,7 +152,6 @@
     background: linear-gradient(135deg, var(--grass), var(--grass-dark));
     color: #0a1f14;
     font-weight: 800;
-    font-family: 'Cairo', sans-serif;
     border: none;
     border-radius: 50px;
     cursor: pointer;
@@ -192,8 +189,6 @@
     border-radius: 20px;
     padding: 20px;
     transition: 0.4s;
-    position: relative;
-    overflow: hidden;
   }
 
   .card:hover {
@@ -232,7 +227,6 @@
     color: var(--soft);
     margin-bottom: 16px;
     line-height: 1.7;
-    font-weight: 400;
   }
 
   .card .price-row {
@@ -257,7 +251,6 @@
     border-radius: 30px;
     cursor: pointer;
     font-weight: 700;
-    font-family: 'Cairo', sans-serif;
     font-size: 14px;
     transition: 0.3s;
   }
@@ -269,7 +262,6 @@
     box-shadow: 0 0 25px rgba(249, 212, 35, 0.8);
   }
 
-  /* ===== الفوتر ===== */
   footer {
     text-align: center;
     padding: 40px 20px;
@@ -278,7 +270,6 @@
     margin-top: 40px;
     backdrop-filter: blur(10px);
     background: rgba(4, 20, 12, 0.5);
-    font-weight: 400;
   }
 
   footer span {
@@ -286,7 +277,6 @@
     font-weight: 700;
   }
 
-  /* ===== إشعار ===== */
   .toast {
     position: fixed;
     bottom: 30px;
@@ -299,7 +289,6 @@
     padding: 14px 30px;
     border-radius: 50px;
     font-weight: 700;
-    font-family: 'Cairo', sans-serif;
     box-shadow: 0 0 40px rgba(249, 212, 35, 0.6);
     transition: 0.4s;
     z-index: 100;
@@ -334,15 +323,13 @@
 </head>
 <body>
 
-<!-- 🎬 الفيديو الخلفي -->
+<!-- 🎬 فيديو Vinland Saga خلفي — مسار كامل -->
 <video id="bgVideo" autoplay muted loop playsinline preload="auto">
-  <source src="background.mp4" type="video/mp4">
+  <source src="https://studymatee.github.io/Vinlande/background.mp4" type="video/mp4">
 </video>
 
-<!-- تعتيم فوق الفيديو -->
 <div class="overlay"></div>
 
-<!-- الهيدر -->
 <header>
   <div class="logo">⚔️ SAGA STORE</div>
   <nav>
@@ -353,14 +340,12 @@
   </nav>
 </header>
 
-<!-- الهيرو -->
 <section class="hero">
   <h1>أرض المحاربين</h1>
   <p>منتجات مستوحاة من عالم الفايكنغ — قوة، حرية، ومغامرة لا تنتهي.</p>
   <a href="#products" class="btn">تسوّق الآن</a>
 </section>
 
-<!-- المنتجات -->
 <section class="products" id="products">
 
   <div class="card">
@@ -425,16 +410,14 @@
 
 </section>
 
-<!-- الفوتر -->
 <footer>
   © 2025 <span>SAGA STORE</span> — كل الحقوق محفوظة ⚔️
 </footer>
 
-<!-- إشعار -->
 <div class="toast" id="toast">✓ تمت الإضافة للسلة</div>
 
 <script>
-  /* ===== تشغيل الفيديو ===== */
+  /* تشغيل الفيديو */
   const video = document.getElementById('bgVideo');
   if (video) {
     video.muted = true;
@@ -444,7 +427,7 @@
     });
   }
 
-  /* ===== السلة ===== */
+  /* السلة */
   let cart = JSON.parse(localStorage.getItem('saga_cart') || '[]');
   const cartCount = document.getElementById('cartCount');
   const toast = document.getElementById('toast');
