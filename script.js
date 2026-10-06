@@ -1,9 +1,9 @@
 /* ============================================
-   Vinland Store — script.js (النسخة الكاملة)
+   Vinland Store — script.js (نسخة نظيفة)
    ============================================ */
 
 /* ============================================
-   إعدادات Supabase
+   إعدادات
    ============================================ */
 const SUPABASE_URL = 'https://ncrycgbrstafdouvipzc.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_6t2dkU27Rkinsoo8MhYAEQ_FSgj4G73';
@@ -16,7 +16,7 @@ if (window.supabase) {
 }
 
 /* ============================================
-   المنتجات الاحتياطية (لو Supabase فشل)
+   المنتجات الاحتياطية
    ============================================ */
 const FALLBACK_PRODUCTS = [
   { id: 1, name: "حساب Steam مميز", desc: "حساب Steam فيه ألعاب AAA + مكتبة ضخمة.", longDesc: "حساب Steam مميز يحتوي على أكثر من 50 لعبة AAA.", price: 25, category: "accounts", img: "https://api.iconify.design/mdi:steam.svg?color=%237cb342", badge: "hot", rating: 5, reviews: 47, stock: 5, bestSeller: true, features: ["أكثر من 50 لعبة", "ضمان 30 يوم", "تسليم فوري"] },
@@ -781,29 +781,20 @@ function changeQty(productId, delta) {
 document.addEventListener('DOMContentLoaded', async () => {
   console.log('🚀 Vinland Store — بدء التحميل...');
 
-  // أول شي: جلب المنتجات من Supabase
   await fetchProducts();
 
-  // بعدها: تهيئة كل شي
   updateCartBadge();
   initAuth();
   initCartDrawer();
   renderCart();
 
-  // الرئيسية
   renderProducts('all');
   renderBestSellers();
   renderReviews();
   renderFAQs();
   initFilters();
-
-  // صفحة المنتج
   initProductPage();
-
-  // صفحة الحساب
   initAccountPage();
-
-  // صفحة السلة
   initCartPage();
 
   console.log('✅ Vinland Store — جاهز!');
